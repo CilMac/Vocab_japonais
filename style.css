@@ -1,0 +1,286 @@
+/* ================
+   Vocabulaire JA — Mobile-first CSS (COULEURS ADAPTÉES)
+   - Couleurs spécifiées : français noir, romaji bleu, kana vert, kanji rouge
+   - Mobile-first, safe-area, contrast & focus
+   ================ */
+:root{
+  --bg: #0b0c0f;
+  --card: #14161a;
+  --text: #f2f4f8;
+  --muted:#a9b0bd;
+  --accent:#2dd4bf;
+  --danger:#ef4444;
+  --ok:#22c55e;
+  --focus:#93c5fd;
+  --radius: 16px;
+  --tap: 48px;
+}
+
+/* Light theme overrides */
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --text:#0b0c0f;
+    --muted:#475569;
+    --accent:#0ea5e9;
+  }
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  line-height:1.5;
+}
+
+.topbar{
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  padding: .75rem .75rem;   /* alignement horizontal avec #app */
+  max-width: 760px;         /* même largeur que #app */
+  margin: 0 auto;           /* centre la topbar */
+  box-sizing: border-box;
+}
+
+.selectors{ display:grid; grid-template-columns:1fr; gap:.5rem; }
+.voice-controls{ display:flex; gap:.5rem; align-items:center; justify-content:flex-start; }
+.badge{ font-size:.85rem; padding:.2rem .5rem; border-radius:999px; background:var(--card); color:var(--muted); border:1px solid rgba(0,0,0,.06); }
+
+#app{ max-width:760px; margin:0 auto; padding:.5rem .75rem 4rem; }
+.loading{ color:var(--muted); }
+.error{ background: color-mix(in srgb, var(--danger), transparent 85%); border:1px solid color-mix(in srgb, var(--danger), transparent 60%); color:#fecaca; padding:.75rem; border-radius:var(--radius); margin-bottom:.75rem; }
+
+.card{ background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); padding:1rem; box-shadow:0 10px 20px rgba(0,0,0,.2); }
+.card.small{ padding:.75rem; }
+
+.word-zone{ margin-top:.25rem; text-align:center; }
+#word-display{ font-size: clamp(2rem, 8vw, 3.2rem); letter-spacing:.02em; font-weight:700; word-wrap:break-word; min-height:2.8em; }
+
+.nav{ margin:.5rem 0; display:flex; gap:.5rem; justify-content:space-between; }
+button, select, input{ background:var(--card); color:var(--text); border:1px solid rgba(255,255,255,.12); padding:.6rem .8rem; border-radius:12px; min-height:var(--tap); font-size:1rem; }
+select{ width:100%; }
+button{ touch-action:manipulation; }
+button:disabled{ opacity:.5; }
+.answer{ display:flex; gap:.5rem; align-items:center; }
+#answer-input{ flex:1; min-width:0; }
+.checkmark{ color:var(--ok); font-weight:700; }
+.crossmark{ color:var(--danger); font-weight:700; }
+.audio{ display:flex; gap:.5rem; margin-top:.25rem; }
+.results{ margin-top:.5rem; display:grid; gap:.5rem; }
+.foot{ position:sticky; bottom:0; padding:.5rem .75rem calc(.5rem + env(safe-area-inset-bottom)); background:linear-gradient(to top, rgba(0,0,0,.35), transparent); backdrop-filter: blur(6px); }
+:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+.sr-only{ position:absolute !important; clip: rect(1px,1px,1px,1px); padding:0; border:0; height:1px; width:1px; overflow:hidden; }
+
+@media (min-width:700px){ .selectors{ grid-template-columns: repeat(3,1fr); } .audio{ justify-content:center; } }
+
+/* =====================
+   Couleurs par langue (demandées)
+   - français : noir (#000000)
+   - romaji : bleu (#1e40af)
+   - kana : vert (#15803d)
+   - kanji : rouge (#b91c1c)
+   Pour la lisibilité en mode sombre, on utilise des variantes plus claires.
+   ===================== */
+.lang-fr { color: #000000; }
+.lang-romaji { color: #1e40af; }
+.lang-kana { color: #15803d; }
+.lang-kanji { color: #b91c1c; }
+
+@media (prefers-color-scheme: dark){
+  /* en dark mode, assurer contraste en éclaircissant légèrement */
+  .lang-fr { color: var(--text); } /* texte principal clair */
+  .lang-romaji { color: #60a5fa; }
+  .lang-kana { color: #86efac; }
+  .lang-kanji { color: #fb7185; }
+}
+
+/* Helpers résultats */
+.result-line{ margin:.25rem 0; white-space:pre-wrap; }
+.result-label{ font-weight:700; margin-right:.5rem; color:var(--muted); }
+.result-value{ font-weight:600; }
+
+
+
+/* Force tout le texte en non-gras pour respecter la demande de CilMac */
+body, button, select, input, #word-display, .result-label, .result-value, .badge, .result-status {
+  font-weight: 400 !important;
+}
+
+/* Style pour le message de statut Correct / Incorrect */
+.result-status{
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+/* Garder les petites icônes de ✓ / ✗ visibles et colorées */
+.checkmark{ color: var(--ok); font-weight:400; }
+.crossmark{ color: var(--danger); font-weight:400; }
+
+
+
+
+/* Largeur >=700px : garder la ligne supérieure (selectors) seule,
+   et placer les badges (stats) et contrôles voix sur la ligne en dessous,
+   côte à côte (stats à gauche, voix à droite). */
+@media (min-width:700px){
+  .topbar{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: .5rem;
+    align-items: center;
+    padding: .75rem .75rem;
+  }
+
+  /* selectors occupe toute la première ligne */
+  .selectors{ grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3,1fr); gap:.5rem; }
+
+  /* seconde ligne : stats à gauche, voice-controls à droite */
+  #stats-container{ grid-column: 1 / 2; display:flex; gap:.5rem; align-items:center; justify-content:flex-start; width:100%; }
+  .voice-controls{ grid-column: 2 / 3; display:flex; gap:.5rem; align-items:center; justify-content:flex-end; }
+}
+
+
+/* Masque le bouton de pré-écoute et le badge de statut à droite du sélecteur de voix */
+.voice-controls > #voice-preview-btn,
+.voice-controls > #voice-status {
+  display: none !important;
+}
+
+
+/* Ajustement : remonte le bas de la carte de mot */
+.card.word-zone {
+  /* réduit l'espace interne bas de la carte */
+  padding-bottom: 0.5rem !important;
+  padding-top: 0.75rem !important;
+}
+
+/* réduit la hauteur minimale du mot et centre verticalement le texte */
+#word-display {
+  min-height: 1.2em !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-bottom: 0 !important;
+}
+
+
+/* ---------- Pastel controls (buttons & selects) ---------- */
+/* variables for control coloring, tuned for light and dark modes */
+:root {
+  --ctrl-bg: rgba(14,165,233,0.06); /* pastel blue on light */
+  --ctrl-border: rgba(14,165,233,0.14);
+  --ctrl-text: var(--text);
+  --ctrl-hover: rgba(14,165,233,0.10);
+  --ctrl-radius: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root{
+    --ctrl-bg: rgba(45,212,191,0.06); /* pastel teal on dark */
+    --ctrl-border: rgba(45,212,191,0.12);
+    --ctrl-hover: rgba(45,212,191,0.10);
+  }
+}
+
+/* Apply to interactive controls */
+button, select {
+  background-color: var(--ctrl-bg);
+  border: 1px solid var(--ctrl-border);
+  color: var(--ctrl-text);
+  border-radius: var(--ctrl-radius);
+  transition: background-color .12s ease, transform .06s ease, box-shadow .12s ease;
+  box-shadow: none;
+}
+
+/* Slight elevation on hover */
+button:hover, select:hover {
+  background-color: var(--ctrl-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+}
+
+/* Stronger focus for keyboard users (preserve existing focus style) */
+button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Keep disabled appearance readable */
+button:disabled, select:disabled {
+  opacity: 0.6;
+  transform: none;
+}
+
+/* Make dropdown arrow readable on light backgrounds */
+select { -webkit-appearance: none; appearance: none; padding-right: 2.4rem; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px); background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+
+/* Audio buttons should visually match but be slightly warmer */
+#audio-word-btn, #audio-example-btn, #voiceToggle, #voice-preview-btn {
+  border-radius: 14px;
+  padding-left: .9rem;
+  padding-right: .9rem;
+}
+
+/* Keep inputs neutral background to remain highly readable */
+#answer-input {
+  background-color: var(--card);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* End of pastel controls */
+
+
+/* Pastel pink for the Vérifier button */
+#verify-btn {
+  background-color: rgba(255,182,193,0.28) !important; /* light pastel pink */
+  border: 1px solid rgba(255,182,193,0.45) !important;
+  color: var(--text, #000) !important;
+  border-radius: 12px !important;
+  padding: .5rem .9rem !important;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.04) !important;
+}
+
+/* hover and focus */
+#verify-btn:hover:not(:disabled) { background-color: rgba(255,182,193,0.36) !important; transform: translateY(-1px) !important; }
+#verify-btn:focus-visible { outline: 2px solid rgba(255,182,193,0.45) !important; outline-offset: 2px !important; }
+
+
+/* Info button in footer */
+.info-btn {
+  margin-left: 0.5rem;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 0.35rem 0.6rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  min-height: 36px;
+  cursor: pointer;
+  align-self: center;
+}
+@media (prefers-color-scheme: light){
+  .info-btn { background: rgba(0,0,0,0.03); color: var(--text); }
+}
+.info-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Modal styles */
+.modal[hidden] { display: none; }
+.modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(3px); }
+.modal-dialog { position: relative; max-width: 760px; width: calc(100% - 2rem); background: var(--card); color: var(--text); border-radius: 14px; padding: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.35); z-index: 2; }
+.modal-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:0.5rem; }
+.modal-header h2 { margin:0; font-size:1.25rem; }
+.modal-close { background: transparent; border: none; font-size:1.1rem; cursor:pointer; padding:0.25rem 0.5rem; }
+.modal-body { max-height: 55vh; overflow:auto; padding-right: 0.25rem; }
+.modal-body p, .modal-body ul { margin: 0.4rem 0; color: var(--muted); }
+.modal-body ul { padding-left: 1.1rem; }
+.modal-footer { display:flex; justify-content:flex-end; margin-top:0.5rem; }
+.modal-ok { padding: 0.5rem 0.9rem; border-radius: 10px; cursor:pointer; }
+

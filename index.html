@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🇯🇵 Vocabulaire Japonais — Kit 400</title>
+  <link rel="preload" as="fetch" href="voc_kit_400_top.json" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <noscript>Cette application nécessite JavaScript.</noscript>
+
+  <header class="topbar" role="banner">
+    <div class="selectors" role="group" aria-label="Filtres d'interrogation">
+      <label for="mode-select" class="sr-only">Mode</label>
+      <select id="mode-select" aria-label="Mode d’interrogation">
+        <option value="Français">Français → (deviner JA)</option>
+        <option value="Romaji">Rōmaji → (deviner FR)</option>
+        <option value="Kana">かな → (deviner FR)</option>
+        <option value="Kanji">漢字 → (deviner FR)</option>
+      </select>
+
+      <label for="asavoir-select" class="sr-only">Importance</label>
+      <select id="asavoir-select" aria-label="Filtre importance">
+        <option value="__ALL__">Tous niveaux</option>
+      </select>
+
+      <label for="category-select" class="sr-only">Catégorie</label>
+      <select id="category-select" aria-label="Filtre catégorie">
+        <option value="__ALL__">Toutes catégories</option>
+      </select>
+    </div>
+
+    <div class="voice-controls" role="group" aria-label="Voix japonaises">
+      
+      <button id="voice-preview-btn" aria-label="Pré-écoute de la voix sélectionnée" title="Pré-écoute">🔊</button>
+      <span id="voice-status" aria-live="polite" class="badge">Détection...</span>
+    </div>
+  </header>
+
+  <main id="app" role="main">
+    <div id="loading-indicator" class="loading">Chargement…</div>
+    <div id="error-message" class="error" role="alert" hidden></div>
+
+    <section class="card word-zone" aria-label="Zone du mot">
+      <div id="word-display" aria-live="polite">—</div>
+    </section>
+
+    <section class="nav" role="navigation" aria-label="Navigation des cartes">
+      <button id="prev-btn" aria-label="Précédent">◀︎</button>
+      <button id="random-btn" aria-label="Aléatoire">🎲</button>
+      <button id="next-btn" aria-label="Suivant">▶︎</button>
+    </section>
+
+    <section class="answer" aria-label="Réponse optionnelle">
+      <input id="answer-input" type="text" inputmode="text" autocomplete="off" placeholder="Ta réponse (optionnelle)" aria-label="Champ de réponse (optionnel)" />
+      <button id="verify-btn" aria-label="Vérifier">Vérifier</button>
+      <span id="checkmark" aria-hidden="true" class="checkmark" hidden>✓</span>
+      <span id="crossmark" aria-hidden="true" class="crossmark" hidden>✗</span>
+    </section>
+
+    <section class="audio" aria-label="Prononciation">
+      <button id="audio-word-btn" aria-label="Prononcer le mot">Mot 🔈</button>
+<button id="voiceToggle" aria-pressed="false" aria-label="Basculer voix femme / homme" title="Voix femme / homme">👩</button>
+      <button id="audio-example-btn" aria-label="Prononcer l’exemple">Exemple 🔈</button>
+    </section>
+
+    <section class="results" aria-label="Résultats">
+      <div id="result-translations" class="card small"></div>
+      <div id="result-example" class="card small"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <small>par CilMac :-)</small>
+      <button id="info-btn" class="info-btn" aria-haspopup="dialog" aria-controls="instructions-modal" title="Instructions">ℹ️</button>
+  </footer>
+
+  <script defer src="app.js"></script>
+
+  <!-- Instructions modal (invisible until opened) -->
+  <div id="instructions-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="instructions-title" hidden>
+    <div class="modal-overlay" data-close-modal></div>
+    <div class="modal-dialog" role="document" tabindex="-1">
+      <header class="modal-header">
+        <h2 id="instructions-title">Instructions</h2>
+        <button id="modal-close-btn" class="modal-close" aria-label="Fermer">✕</button>
+      </header>
+      <div class="modal-body">
+        <p>Objet de la page :</p>
+        <p>Cette page affiche des cartes de vocabulaire japonais. Sélectionne un mode (Français, Rōmaji, かな, 漢字) pour afficher un mot. Tu peux répondre dans le champ et cliquer « Vérifier » pour valider.</p>
+        <p>Fonctionnement :</p>
+        <ul>
+          <li><strong>Français →</strong> affiche le français et tu dois saisir la lecture japonaise (rōmaji/kana/kanji).</li>
+          <li><strong>Rōmaji / かな / 漢字 →</strong> affiche la forme choisie et tu dois deviner le Français.</li>
+          <li>Boutons audio lisent le mot ou l'exemple en japonais si une voix JA est disponible. Sinon un MP3 fallback peut être utilisé.</li>
+          <li>La touche <kbd>Entrée</kbd> déclenche uniquement le bouton « Vérifier » lorsque le champ de réponse est actif.</li>
+          <li>Un son de victoire est joué si la réponse est correcte (fichier <code>victory.mp3</code> requis dans le dossier).</li>
+        </ul>
+        <p>Raccourcis :</p>
+        <ul>
+          <li><kbd>◀</kbd> Précédent</li>
+          <li><kbd>▶</kbd> Suivant</li>
+          <li><kbd>🎲</kbd> Aléatoire</li>
+        </ul>
+      </div>
+      <footer class="modal-footer">
+        <button id="modal-ok-btn" class="modal-ok">OK</button>
+      </footer>
+    </div>
+  </div>
+  <!-- End Instructions modal -->
+
+</body>
+</html>
