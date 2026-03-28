@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本語 — Cartes Voyage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Shippori+Mincho:wght@400;600&family=Crimson+Pro:ital,wght@1,300;1,400&family=Lato:wght@300;400&family=M+PLUS+Rounded+1c:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1410;
+  --ink-soft: #3d3530;
+  --ink-faint: #7a6e68;
+  --washi: #f7f3ec;
+  --washi-dark: #ede7dc;
+  --washi-mid: #e8dfd2;
+  --red: #b5342a;
+  --red-soft: #d9534f22;
+  --gold: #c49a3c;
+  --gold-soft: #c49a3c18;
+  --teal: #2a7a6e;
+  --teal-soft: #2a7a6e15;
+  --navy: #1e3a5f;
+  --navy-soft: #1e3a5f15;
+
+  --theme-restaurant: #b5342a;
+  --theme-transport: #1e3a5f;
+  --theme-hotel: #2a7a6e;
+  --theme-shopping: #7a4f1e;
+
+  --font-jp: 'Noto Serif JP', serif;
+  --font-jp-alt: 'M PLUS Rounded 1c', sans-serif;
+  --font-title: 'Shippori Mincho', serif;
+  --font-display: 'Crimson Pro', serif;
+  --font-body: 'Lato', sans-serif;
+
+  /* couleurs par type de contenu */
+  --col-kanji:  #9b1c1c;
+  --col-kana:   #1a5c2e;
+  --col-romaji: #1a3a6e;
+  --col-fr:     #1a1410;
+
+  /* réglages utilisateur */
+  --txt-scale: 1;        /* multiplicateur taille texte */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--washi);
+  color: var(--ink);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Texture washi subtile */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(180,160,130,.03) 3px, rgba(180,160,130,.03) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(180,160,130,.02) 5px, rgba(180,160,130,.02) 6px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+header {
+  position: relative;
+  z-index: 1;
+  padding: 2.5rem 2rem 1.5rem;
+  border-bottom: 1px solid var(--washi-mid);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-left {}
+
+.title-jp {
+  font-family: var(--font-jp);
+  font-weight: 300;
+  font-size: 2.2rem;
+  color: var(--ink);
+  letter-spacing: .08em;
+  line-height: 1;
+}
+
+.title-sub {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--ink-faint);
+  margin-top: 4px;
+  font-weight: 400;
+  letter-spacing: .03em;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mode-toggle {
+  display: flex;
+  background: var(--washi-dark);
+  border-radius: 24px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.mode-btn {
+  padding: 6px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .02em;
+}
+
+.mode-btn.active {
+  background: var(--washi);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
+/* ── THEME TABS ── */
+.theme-nav {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--washi-mid);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.theme-nav::-webkit-scrollbar { display: none; }
+
+.theme-tab {
+  flex-shrink: 0;
+  padding: 1rem 1.5rem .9rem;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: .04em;
+  color: var(--ink-faint);
+  cursor: pointer;
+  position: relative;
+  transition: color .2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--theme-color, var(--ink));
+  transform: scaleX(0);
+  transition: transform .2s;
+}
+
+.theme-tab.active { color: var(--ink); }
+.theme-tab.active::after { transform: scaleX(1); }
+
+.theme-icon { font-size: 16px; }
+
+/* ── LEVEL STRIP ── */
+.level-strip {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: .75rem 2rem;
+  background: var(--washi-dark);
+  border-bottom: 1px solid var(--washi-mid);
+  flex-wrap: wrap;
+}
+
+.level-label {
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.level-btns { display: flex; gap: 6px; }
+
+.level-btn {
+  padding: 4px 14px;
+  border: 1px solid var(--washi-mid);
+  border-radius: 20px;
+  background: var(--washi);
+  font-size: 12px;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: all .2s;
+  font-family: var(--font-body);
+  letter-spacing: .02em;
+}
+
+.level-btn.active {
+  border-color: var(--ink-soft);
+  color: var(--ink);
+  background: var(--washi);
+  font-weight: 400;
+}
+
+.stats-strip {
+  margin-left: auto;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.stat { font-size: 12px; color: var(--ink-faint); }
+.stat strong { color: var(--ink); font-weight: 400; }
+
+/* ── MAIN ── */
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ── PROGRESS ── */
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.75rem;
+}
+
+.progress-track {
+  flex: 1;
+  height: 2px;
+  background: var(--washi-mid);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--ink-soft);
+  border-radius: 2px;
+  transition: width .4s ease;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── CARD ── */
+.card-area {
+  perspective: 1000px;
+  margin-bottom: 1.25rem;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  padding-top: 54%;
+  transform-style: preserve-3d;
+  transition: transform .55s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+
+.card-inner.flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--washi-mid);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.card-face::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--theme-color, var(--ink));
+  opacity: .7;
+}
+
+.card-face.back {
+  transform: rotateY(180deg);
+  background: var(--washi);
+}
+
+.card-kana {
+  font-family: var(--font-jp);
+  font-weight: 400;
+  font-size: clamp(1.1rem, 5vw, 4.5rem); /* taille de base — affinée en JS selon longueur */
+  color: var(--col-kana);
+  line-height: 1.25;
+  text-align: center;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.card-kanji {
+  font-family: var(--font-jp);
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  color: var(--col-kanji);
+  font-weight: 400;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.card-level-badge {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 10px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: var(--washi-dark);
+  padding: 2px 9px;
+  border-radius: 10px;
+}
+
+.card-theme-badge {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--theme-color, var(--ink));
+  opacity: .8;
+}
+
+.card-romaji {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  color: var(--col-romaji);
+  line-height: 1.25;
+  text-align: center;
+  max-width: 90%;
+  word-break: break-word;
+  scale: var(--txt-scale);
+  transform-origin: center top;
+}
+
+.card-fr {
+  font-size: clamp(.95rem, 2.8vw, 1.15rem);
+  color: var(--col-fr);
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.45;
+  max-width: 88%;
+  scale: var(--txt-scale);
+  transform-origin: center top;
+}
+
+.card-kana-small {
+  font-family: var(--font-jp);
+  font-size: 1.4rem;
+  color: var(--col-kana);
+  margin-top: 2px;
+  text-align: center;
+  scale: var(--txt-scale);
+  transform-origin: center top;
+}
+
+.card-kanji {
+  font-family: var(--font-jp);
+  font-size: 1.1rem;
+  color: var(--col-kanji);
+  font-weight: 400;
+  text-align: center;
+  margin-top: 1px;
+  scale: var(--txt-scale);
+  transform-origin: center top;
+}
+
+/* ── MODALE RÉGLAGES ── */
+.settings-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,20,16,.35);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+.settings-overlay.open { display: flex; }
+
+.settings-modal {
+  background: var(--washi);
+  border: 1px solid var(--washi-mid);
+  border-radius: var(--border-radius-lg, 14px);
+  padding: 2rem 2rem 1.5rem;
+  width: min(420px, 92vw);
+  box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  position: relative;
+}
+
+.settings-modal h3 {
+  font-family: var(--font-title);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 1.75rem;
+  letter-spacing: .04em;
+}
+
+.settings-close {
+  position: absolute;
+  top: 14px; right: 16px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--ink-faint);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+}
+.settings-close:hover { color: var(--ink); }
+
+.settings-row {
+  margin-bottom: 1.5rem;
+}
+
+.settings-label {
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  display: block;
+  margin-bottom: .75rem;
+}
+
+/* Slider taille */
+.settings-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.settings-slider-wrap input[type=range] {
+  flex: 1;
+}
+.settings-slider-val {
+  font-size: 13px;
+  color: var(--ink-soft);
+  min-width: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Toggle police JP */
+.font-toggle {
+  display: flex;
+  gap: 10px;
+}
+.font-opt {
+  flex: 1;
+  padding: 12px 8px;
+  border: 1px solid var(--washi-mid);
+  border-radius: 10px;
+  background: var(--washi);
+  cursor: pointer;
+  text-align: center;
+  transition: all .18s;
+}
+.font-opt span {
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.font-opt small {
+  font-size: 10px;
+  color: var(--ink-faint);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.font-opt.active {
+  border-color: var(--ink-soft);
+  background: var(--washi-dark);
+}
+.font-opt.active small { color: var(--ink); }
+
+/* Bouton ⚙ dans le header */
+.btn-settings {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--washi-mid);
+  background: var(--washi);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-faint);
+  transition: all .18s;
+  margin-left: 6px;
+}
+.btn-settings:hover { border-color: var(--ink-soft); color: var(--ink); }
+
+.tap-hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: .05em;
+  margin-bottom: 1rem;
+}
+
+/* ── CONTROLS ── */
+.card-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+
+.ctrl-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--washi-mid);
+  background: var(--washi);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .18s;
+  color: var(--ink-faint);
+  letter-spacing: .02em;
+}
+
+.ctrl-btn:hover { background: var(--washi-dark); color: var(--ink); }
+
+.ctrl-btn.bad {
+  border-color: #e0c4c4;
+  color: var(--red);
+}
+
+.ctrl-btn.bad:hover { background: var(--red-soft); }
+
+.ctrl-btn.good {
+  border-color: #b8d4c4;
+  color: var(--teal);
+}
+
+.ctrl-btn.good:hover { background: var(--teal-soft); }
+
+.ctrl-btn.flip-btn {
+  border-color: var(--ink-soft);
+  color: var(--ink);
+  background: var(--washi);
+}
+
+/* ── QUIZ MODE ── */
+.quiz-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+
+.quiz-opt {
+  padding: 14px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--washi-mid);
+  background: var(--washi);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .18s;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.3;
+}
+
+.quiz-opt:hover:not(:disabled) { background: var(--washi-dark); border-color: var(--ink-soft); }
+
+.quiz-opt.correct {
+  background: #eef6f0;
+  border-color: #7fba9a;
+  color: #1e5e36;
+}
+
+.quiz-opt.wrong {
+  background: #fdf0f0;
+  border-color: #e0a0a0;
+  color: #8b2020;
+}
+
+.quiz-opt:disabled { cursor: default; }
+
+/* ── DONE SCREEN ── */
+.done-screen {
+  text-align: center;
+  padding: 3rem 1rem;
+  display: none;
+}
+
+.done-screen.visible { display: block; }
+
+.done-jp {
+  font-family: var(--font-jp);
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--ink-faint);
+  margin-bottom: 1rem;
+}
+
+.done-score {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: .25rem;
+}
+
+.done-label {
+  font-size: .9rem;
+  color: var(--ink-faint);
+  letter-spacing: .05em;
+  margin-bottom: 2rem;
+}
+
+.done-msg {
+  font-size: 1rem;
+  color: var(--ink-soft);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.restart-btn {
+  padding: 12px 32px;
+  border: 1px solid var(--ink-soft);
+  border-radius: 24px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink);
+  cursor: pointer;
+  letter-spacing: .04em;
+  transition: all .2s;
+}
+
+.restart-btn:hover { background: var(--ink); color: var(--washi); }
+
+/* ── WORD LIST (mode révision) ── */
+.word-list {
+  display: block;
+}
+
+.wl-group { margin-bottom: 2.5rem; }
+
+.wl-group-title {
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: .5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wl-group-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--washi-mid);
+}
+
+/* Grille : kana+kanji | romaji+fr | badge | audio */
+.wl-item {
+  display: grid;
+  grid-template-columns: minmax(0,2fr) minmax(0,3fr) 5rem 2rem;
+  align-items: center;
+  gap: 0 16px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--washi-mid);
+  transition: background .15s;
+  cursor: default;
+}
+
+.wl-item:first-of-type { border-top: 1px solid var(--washi-mid); }
+.wl-item:hover { background: var(--washi-dark); }
+
+/* Colonne 1 : kana + kanji empilés */
+.wl-col-jp {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.wl-kana {
+  font-family: var(--font-jp);
+  font-size: 1rem;
+  color: var(--col-kana);
+  white-space: normal;
+  line-height: 1.4;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.wl-kanji {
+  font-family: var(--font-jp);
+  font-size: .82rem;
+  color: var(--col-kanji);
+  white-space: normal;
+  line-height: 1.3;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* Colonne 2 : romaji + français empilés */
+.wl-col-fr {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.wl-romaji {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: .95rem;
+  color: var(--col-romaji);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.wl-fr {
+  font-size: .82rem;
+  color: var(--col-fr);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+/* Colonne 3 : badge niveau */
+.wl-lvl {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--washi-mid);
+  color: var(--ink-faint);
+  white-space: nowrap;
+  letter-spacing: .03em;
+  text-align: center;
+  justify-self: start;
+}
+
+/* ── NAV ARROWS ── */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: .5rem;
+}
+
+.nav-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--washi-mid);
+  background: var(--washi);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-faint);
+  transition: all .18s;
+}
+
+.nav-btn:hover { border-color: var(--ink-soft); color: var(--ink); }
+
+.nav-count {
+  font-size: 13px;
+  color: var(--ink-faint);
+  min-width: 60px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* séparateur vertical */
+.sep { width: 1px; height: 14px; background: var(--washi-mid); }
+
+/* ── BOUTON AUDIO ── */
+.btn-audio {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--washi-mid);
+  background: var(--washi);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  color: var(--ink-faint);
+  transition: all .18s;
+  flex-shrink: 0;
+  padding: 0;
+  line-height: 1;
+}
+.btn-audio:hover { border-color: var(--ink-soft); color: var(--ink); background: var(--washi-dark); }
+.btn-audio.playing { border-color: var(--teal); color: var(--teal); }
+.card-audio-btn {
+  position: absolute;
+  bottom: 14px; right: 16px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--washi-mid);
+  background: var(--washi);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  color: var(--ink-faint);
+  transition: all .18s;
+  padding: 0;
+}
+.card-audio-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+@media (max-width: 480px) {
+  header { padding: 1.5rem 1rem 1rem; }
+  .title-jp { font-size: 1.7rem; }
+  main { padding: 1.5rem 1rem 3rem; }
+  .quiz-options { grid-template-columns: 1fr; }
+  .wl-item { grid-template-columns: minmax(0,1fr) minmax(0,1.5fr) auto; }
+  .wl-lvl { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="title-jp">日本語 旅行</div>
+    <div class="title-sub">Vocabulaire voyage — Hiragana</div>
+  </div>
+  <div class="header-right">
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-mode-flash" onclick="setMode('flash')">Cartes</button>
+      <button class="mode-btn" id="btn-mode-quiz" onclick="setMode('quiz')">Quiz</button>
+      <button class="mode-btn" id="btn-mode-list" onclick="setMode('list')">Liste</button>
+    </div>
+    <button class="btn-settings" onclick="openSettings()" title="Réglages">⚙</button>
+  </div>
+</header>
+
+<!-- MODALE RÉGLAGES -->
+<div class="settings-overlay" id="settings-overlay" onclick="overlayClick(event)">
+  <div class="settings-modal">
+    <button class="settings-close" onclick="closeSettings()">✕</button>
+    <h3>Réglages d'affichage</h3>
+
+    <div class="settings-row">
+      <span class="settings-label">Taille des traductions</span>
+      <div class="settings-slider-wrap">
+        <span style="font-size:12px;color:var(--ink-faint)">A</span>
+        <input type="range" id="txt-scale-slider" min="70" max="140" step="5" value="100"
+               oninput="applyTxtScale(this.value)">
+        <span style="font-size:17px;color:var(--ink-faint)">A</span>
+        <span class="settings-slider-val" id="txt-scale-val">100%</span>
+      </div>
+    </div>
+
+    <div class="settings-row">
+      <span class="settings-label">Police japonaise</span>
+      <div class="font-toggle">
+        <button class="font-opt active" id="font-opt-serif" onclick="setJPFont('serif')">
+          <span style="font-family:'Noto Serif JP',serif">あさごはん</span>
+          <small>Serif</small>
+        </button>
+        <button class="font-opt" id="font-opt-round" onclick="setJPFont('round')">
+          <span style="font-family:'M PLUS Rounded 1c',sans-serif">あさごはん</span>
+          <small>Arrondie</small>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="theme-nav" id="theme-nav"></nav>
+
+<div class="level-strip">
+  <span class="level-label">Niveau</span>
+  <div class="level-btns">
+    <button class="level-btn active" id="lvl-all" onclick="setLevel('all')">Tous</button>
+    <button class="level-btn" id="lvl-1" onclick="setLevel('1')">Débutant</button>
+    <button class="level-btn" id="lvl-2" onclick="setLevel('2')">Intermédiaire</button>
+    <button class="level-btn" id="lvl-3" onclick="setLevel('3')">Avancé</button>
+  </div>
+  <div class="stats-strip">
+    <span class="stat">✓ <strong id="stat-ok">0</strong></span>
+    <span class="stat">✗ <strong id="stat-ko">0</strong></span>
+    <span class="stat" id="stat-total"></span>
+  </div>
+</div>
+
+<main>
+  <!-- MODE CARTES -->
+  <div id="flash-mode">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-bar" id="prog-bar"></div></div>
+      <span class="progress-text" id="prog-text">1 / —</span>
+    </div>
+    <div class="card-area" onclick="flipCard()" id="card-area">
+      <div class="card-inner" id="card-inner">
+        <div class="card-face front" id="card-front"></div>
+        <div class="card-face back" id="card-back"></div>
+      </div>
+    </div>
+    <p class="tap-hint" id="tap-hint">Cliquez pour retourner</p>
+    <div class="card-controls" id="ctrl-flip" style="display:flex">
+      <button class="ctrl-btn flip-btn" onclick="flipCard()">↺ Retourner</button>
+    </div>
+    <div class="card-controls" id="ctrl-answer" style="display:none">
+      <button class="ctrl-btn bad" onclick="answer(false)">✗ À revoir</button>
+      <button class="ctrl-btn good" onclick="answer(true)">✓ Je savais</button>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn" onclick="prevCard()">←</button>
+      <span class="nav-count" id="nav-count">1 / —</span>
+      <button class="nav-btn" onclick="nextCard()">→</button>
+    </div>
+    <div class="done-screen" id="done-screen">
+      <div class="done-jp">お疲れ様！</div>
+      <div class="done-score" id="done-pct"></div>
+      <div class="done-label">de réussite</div>
+      <p class="done-msg" id="done-msg"></p>
+      <button class="restart-btn" onclick="restart()">Recommencer</button>
+    </div>
+  </div>
+
+  <!-- MODE QUIZ -->
+  <div id="quiz-mode" style="display:none">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-bar" id="q-prog-bar"></div></div>
+      <span class="progress-text" id="q-prog-text">1 / —</span>
+    </div>
+    <div class="card-area">
+      <div class="card-inner" style="cursor:default">
+        <div class="card-face front" id="q-card-front" style="cursor:default"></div>
+      </div>
+    </div>
+    <div class="quiz-options" id="quiz-options"></div>
+    <div class="done-screen" id="q-done-screen">
+      <div class="done-jp">お疲れ様！</div>
+      <div class="done-score" id="q-done-pct"></div>
+      <div class="done-label">de réussite</div>
+      <p class="done-msg" id="q-done-msg"></p>
+      <button class="restart-btn" onclick="qRestart()">Rejouer</button>
+    </div>
+  </div>
+
+  <!-- MODE LISTE -->
+  <div id="list-mode" class="word-list" style="display:none"></div>
+</main>
+
+<script>
+// ═══════════════════════════════════════
+//  DONNÉES
+// ═══════════════════════════════════════
+const THEMES = [
+  { id:'all',         label:'Tout',          icon:'✦',  color:'#4a3f78', isAll:true },
+  { id:'salutations', label:'Salutations',   icon:'🙏', color:'#6b3a6b' },
+  { id:'restaurant',  label:'Restaurant',    icon:'🍜', color:'#b5342a' },
+  { id:'transport',   label:'Transport',     icon:'🚃', color:'#1e3a5f' },
+  { id:'hotel',       label:'Hôtel',         icon:'🏯', color:'#2a7a6e' },
+  { id:'shopping',    label:'Shopping',      icon:'🛍', color:'#7a4f1e' },
+  { id:'sante',       label:'Santé',         icon:'🏥', color:'#7a2a2a' },
+  { id:'grammar',     label:'Mots-outils',   icon:'⟡',  color:'#3d5a3d' },
+  { id:'compteurs',   label:'Compteurs',     icon:'🔢', color:'#2a4a6e' },
+];
+
+const CARDS = [
+  // ── SALUTATIONS & POLITESSE (niveau 1)
+  { theme:'salutations', level:1, kana:'おはようございます', romaji:'ohayō gozaimasu',  fr:'Bonjour (matin)', kanji:'お早うございます' },
+  { theme:'salutations', level:1, kana:'こんにちは',         romaji:'konnichiwa',        fr:'Bonjour (journée)', kanji:'今日は' },
+  { theme:'salutations', level:1, kana:'こんばんは',         romaji:'konbanwa',          fr:'Bonsoir', kanji:'今晩は' },
+  { theme:'salutations', level:1, kana:'おやすみなさい',     romaji:'oyasumi nasai',     fr:'Bonne nuit', kanji:'お休みなさい' },
+  { theme:'salutations', level:1, kana:'さようなら',         romaji:'sayōnara',          fr:'Au revoir (définitif)', kanji:'左様なら' },
+  { theme:'salutations', level:1, kana:'またね',             romaji:'mata ne',           fr:'À bientôt / à plus' },
+  { theme:'salutations', level:1, kana:'ありがとうございます',romaji:'arigatō gozaimasu', fr:'Merci beaucoup', kanji:'有り難うございます' },
+  { theme:'salutations', level:1, kana:'どういたしまして',   romaji:'dō itashimashite',  fr:'De rien / avec plaisir', kanji:'どう致しまして' },
+  { theme:'salutations', level:1, kana:'すみません',         romaji:'sumimasen',         fr:'Excusez-moi / pardon', kanji:'済みません' },
+  { theme:'salutations', level:1, kana:'ごめんなさい',       romaji:'gomen nasai',       fr:'Je suis désolé(e)', kanji:'御免なさい' },
+  { theme:'salutations', level:1, kana:'はい',               romaji:'hai',               fr:'Oui / d\'accord', kanji:'はい' },
+  { theme:'salutations', level:1, kana:'いいえ',             romaji:'iie',               fr:'Non' },
+  { theme:'salutations', level:1, kana:'わかりました',       romaji:'wakarimashita',     fr:'J\'ai compris / d\'accord', kanji:'分かりました' },
+  { theme:'salutations', level:1, kana:'わかりません',       romaji:'wakarimasen',       fr:'Je ne comprends pas', kanji:'分かりません' },
+  { theme:'salutations', level:1, kana:'おねがいします',     romaji:'onegaishimasu',     fr:'S\'il vous plaît', kanji:'お願いします' },
+  { theme:'salutations', level:1, kana:'いただきます',       romaji:'itadakimasu',       fr:'Bon appétit (avant de manger)', kanji:'頂きます' },
+  { theme:'salutations', level:1, kana:'ごちそうさまでした', romaji:'gochisōsama deshita',fr:'Merci pour ce repas', kanji:'御馳走様でした' },
+  { theme:'salutations', level:1, kana:'よろしくおねがいします',romaji:'yoroshiku onegaishimasu',fr:'Enchanté(e) / comptez sur moi', kanji:'宜しくお願いします' },
+  // niveau 2
+  { theme:'salutations', level:2, kana:'はじめまして',             romaji:'hajimemashite',              fr:'Enchanté(e) (première rencontre)', kanji:'初めまして' },
+  { theme:'salutations', level:2, kana:'わたしのなまえは〜です',   romaji:'watashi no namae wa ~ desu', fr:'Je m\'appelle ~', kanji:'私の名前は〜です' },
+  { theme:'salutations', level:2, kana:'にほんごがすこしはなせます',romaji:'nihongo ga sukoshi hanasemasu',fr:'Je parle un peu japonais', kanji:'日本語が少し話せます' },
+  { theme:'salutations', level:2, kana:'えいごがはなせますか',     romaji:'eigo ga hanasemasu ka',      fr:'Parlez-vous anglais ?', kanji:'英語が話せますか' },
+  { theme:'salutations', level:2, kana:'もういちどいってください', romaji:'mō ichido itte kudasai',     fr:'Pouvez-vous répéter, s.v.p. ?', kanji:'もう一度言ってください' },
+  { theme:'salutations', level:2, kana:'ゆっくりはなしてください', romaji:'yukkuri hanashite kudasai',  fr:'Parlez plus lentement, s.v.p.', kanji:'ゆっくり話してください' },
+  { theme:'salutations', level:2, kana:'フランスからきました',     romaji:'Furansu kara kimashita',     fr:'Je viens de France', kanji:'フランスから来ました' },
+  { theme:'salutations', level:2, kana:'たのしかったです',         romaji:'tanoshikatta desu',          fr:'C\'était très agréable', kanji:'楽しかったです' },
+  { theme:'salutations', level:2, kana:'きをつけて',               romaji:'ki o tsukete',               fr:'Prenez soin de vous / bonne route', kanji:'気をつけて' },
+
+  // ── SALUTATIONS (niveau 3)
+  { theme:'salutations', level:3, kana:'おかげさまで',                   romaji:'okage-sama de',                    fr:'Grâce à vous / je vais bien (formule polie)', kanji:'お陰様で' },
+  { theme:'salutations', level:3, kana:'おじゃまします',                 romaji:'ojama shimasu',                    fr:'Permettez-moi d\'entrer / je vous dérange', kanji:'お邪魔します' },
+  { theme:'salutations', level:3, kana:'ごめんください',                 romaji:'gomen kudasai',                    fr:'Il y a quelqu\'un ? (en entrant)', kanji:'御免ください' },
+  { theme:'salutations', level:3, kana:'おせわになっております',         romaji:'osewa ni natte orimasu',           fr:'Merci pour tout ce que vous faites', kanji:'お世話になっております' },
+  { theme:'salutations', level:3, kana:'よかったらまたおはなしましょう', romaji:'yokattara mata ohanashi mashō',     fr:'Si vous voulez, parlons encore une fois', kanji:'よかったらまたお話しましょう' },
+  { theme:'salutations', level:3, kana:'にほんはいかがですか',           romaji:'nihon wa ikaga desu ka',            fr:'Comment trouvez-vous le Japon ?', kanji:'日本はいかがですか' },
+  { theme:'salutations', level:3, kana:'どうぞよろしくおつたえください', romaji:'dōzo yoroshiku otsutae kudasai',   fr:'Transmettez mes amitiés s.v.p.', kanji:'どうぞよろしくお伝えください' },
+
+  // ── RESTAURANT (niveau 1 = mots isolés)
+  { theme:'restaurant', level:1, kana:'みず',       romaji:'mizu',         fr:'eau', kanji:'水' },
+  { theme:'restaurant', level:1, kana:'おちゃ',     romaji:'ocha',         fr:'thé vert', kanji:'お茶' },
+  { theme:'restaurant', level:1, kana:'ビール',     romaji:'bīru',         fr:'bière' },
+  { theme:'restaurant', level:1, kana:'さけ',       romaji:'sake',         fr:'saké / alcool de riz', kanji:'酒' },
+  { theme:'restaurant', level:1, kana:'ごはん',     romaji:'gohan',        fr:'riz / repas', kanji:'御飯' },
+  { theme:'restaurant', level:1, kana:'すし',       romaji:'sushi',        fr:'sushi', kanji:'寿司' },
+  { theme:'restaurant', level:1, kana:'ラーメン',   romaji:'rāmen',        fr:'rāmen' },
+  { theme:'restaurant', level:1, kana:'てんぷら',   romaji:'tenpura',      fr:'tempura', kanji:'天ぷら' },
+  { theme:'restaurant', level:1, kana:'さしみ',     romaji:'sashimi',      fr:'sashimi', kanji:'刺身' },
+  { theme:'restaurant', level:1, kana:'めにゅー',   romaji:'menyū',        fr:'menu / carte', kanji:'メニュー' },
+  { theme:'restaurant', level:1, kana:'おかんじょう',romaji:'okanjō',       fr:'addition', kanji:'お勘定' },
+  { theme:'restaurant', level:1, kana:'からい',     romaji:'karai',        fr:'épicé / piquant', kanji:'辛い' },
+  { theme:'restaurant', level:1, kana:'あまい',     romaji:'amai',         fr:'sucré', kanji:'甘い' },
+  { theme:'restaurant', level:1, kana:'おいしい',   romaji:'oishii',       fr:'délicieux', kanji:'美味しい' },
+  // niveau 2 = phrases courtes
+  { theme:'restaurant', level:2, kana:'これをください',      romaji:'kore o kudasai',         fr:'Je voudrais ceci, s\'il vous plaît', kanji:'これを下さい' },
+  { theme:'restaurant', level:2, kana:'おすすめはなんですか', romaji:'osusume wa nan desu ka', fr:'Qu\'est-ce que vous recommandez ?', kanji:'お勧めは何ですか' },
+  { theme:'restaurant', level:2, kana:'アレルギーがあります', romaji:'arerugī ga arimasu',     fr:'J\'ai une allergie', kanji:'アレルギーがあります' },
+  { theme:'restaurant', level:2, kana:'おみずをください',     romaji:'omizu o kudasai',        fr:'De l\'eau, s\'il vous plaît', kanji:'お水を下さい' },
+  { theme:'restaurant', level:2, kana:'おかんじょうをください',romaji:'okanjō o kudasai',       fr:'L\'addition, s\'il vous plaît', kanji:'お勘定を下さい' },
+  { theme:'restaurant', level:2, kana:'とてもおいしかったです',romaji:'totemo oishikatta desu', fr:'C\'était vraiment délicieux', kanji:'とても美味しかったです' },
+  { theme:'restaurant', level:2, kana:'ひとりです',           romaji:'hitori desu',            fr:'Je suis seul(e)', kanji:'一人です' },
+  { theme:'restaurant', level:2, kana:'ふたりです',           romaji:'futari desu',            fr:'Nous sommes deux', kanji:'二人です' },
+
+  // ── RESTAURANT (niveau 3)
+  { theme:'restaurant', level:3, kana:'このりょうりにはなにがはいっていますか', romaji:'kono ryōri ni wa nani ga haitte imasu ka', fr:'Quels sont les ingrédients de ce plat ?', kanji:'この料理には何が入っていますか' },
+  { theme:'restaurant', level:3, kana:'にくなしでつくれますか',         romaji:'niku nashi de tsukuremasu ka',     fr:'Pouvez-vous le faire sans viande ?', kanji:'肉なしで作れますか' },
+  { theme:'restaurant', level:3, kana:'おまかせコースをおねがいします', romaji:'omakase kōsu o onegaishimasu',     fr:'Le menu omakase, s.v.p.', kanji:'おまかせコースをお願いします' },
+  { theme:'restaurant', level:3, kana:'ざしきせきはありますか',         romaji:'zashiki-seki wa arimasu ka',       fr:'Avez-vous des tables en tatami ?', kanji:'座敷席はありますか' },
+  { theme:'restaurant', level:3, kana:'のみほうだいはありますか',       romaji:'nomihōdai wa arimasu ka',          fr:'Avez-vous une formule à volonté à boire ?', kanji:'飲み放題はありますか' },
+  { theme:'restaurant', level:3, kana:'きょうのおすすめはなんですか',   romaji:'kyō no osusume wa nan desu ka',    fr:'Quelle est la spécialité du jour ?', kanji:'今日のお勧めは何ですか' },
+  { theme:'transport', level:1, kana:'えき',       romaji:'eki',          fr:'gare', kanji:'駅' },
+  { theme:'transport', level:1, kana:'でんしゃ',   romaji:'densha',       fr:'train / métro', kanji:'電車' },
+  { theme:'transport', level:1, kana:'しんかんせん',romaji:'shinkansen',   fr:'TGV japonais', kanji:'新幹線' },
+  { theme:'transport', level:1, kana:'バス',       romaji:'basu',         fr:'bus' },
+  { theme:'transport', level:1, kana:'タクシー',   romaji:'takushī',      fr:'taxi' },
+  { theme:'transport', level:1, kana:'くうこう',   romaji:'kūkō',         fr:'aéroport', kanji:'空港' },
+  { theme:'transport', level:1, kana:'きっぷ',     romaji:'kippu',        fr:'billet / ticket', kanji:'切符' },
+  { theme:'transport', level:1, kana:'のりかえ',   romaji:'norikae',      fr:'correspondance', kanji:'乗り換え' },
+  { theme:'transport', level:1, kana:'でぐち',     romaji:'deguchi',      fr:'sortie', kanji:'出口' },
+  { theme:'transport', level:1, kana:'いりぐち',   romaji:'iriguchi',     fr:'entrée', kanji:'入口' },
+  { theme:'transport', level:1, kana:'みぎ',       romaji:'migi',         fr:'droite', kanji:'右' },
+  { theme:'transport', level:1, kana:'ひだり',     romaji:'hidari',       fr:'gauche', kanji:'左' },
+  { theme:'transport', level:1, kana:'まっすぐ',   romaji:'massugu',      fr:'tout droit', kanji:'真っ直ぐ' },
+  { theme:'transport', level:1, kana:'ちかてつ',   romaji:'chikatetsu',   fr:'métro (souterrain)', kanji:'地下鉄' },
+  // niveau 2
+  { theme:'transport', level:2, kana:'〜はどこですか',            romaji:'~ wa doko desu ka',                fr:'Où se trouve ~ ?', kanji:'〜はどこですか' },
+  { theme:'transport', level:2, kana:'〜にいきたいです',           romaji:'~ ni ikitai desu',                 fr:'Je voudrais aller à ~', kanji:'〜に行きたいです' },
+  { theme:'transport', level:2, kana:'このでんしゃは〜にとまりますか',romaji:'kono densha wa ~ ni tomarimasu ka',fr:'Ce train s\'arrête-t-il à ~ ?', kanji:'この電車は〜に止まりますか' },
+  { theme:'transport', level:2, kana:'きっぷをいちまいください',    romaji:'kippu o ichimai kudasai',          fr:'Un billet, s\'il vous plaît', kanji:'切符を一枚ください' },
+  { theme:'transport', level:2, kana:'つぎのえきはどこですか',      romaji:'tsugi no eki wa doko desu ka',     fr:'Où est la prochaine station ?', kanji:'次の駅はどこですか' },
+  { theme:'transport', level:2, kana:'なんじにでますか',            romaji:'nanji ni demasu ka',               fr:'À quelle heure part-il ?', kanji:'何時に出ますか' },
+  { theme:'transport', level:2, kana:'まよいました',                romaji:'mayoimashita',                     fr:'Je me suis perdu(e)', kanji:'迷いました' },
+
+  // ── TRANSPORT (niveau 3)
+  { theme:'transport', level:3, kana:'〜いきのじゅうじかんをおしえてください', romaji:'~ yuki no jūjikan o oshiete kudasai', fr:'Donnez-moi l\'heure de départ pour ~', kanji:'〜行きの出発時間を教えてください' },
+  { theme:'transport', level:3, kana:'この〜のかいすうけんはかえますか',  romaji:'kono ~ no kaisūken wa kaemasu ka',  fr:'Puis-je acheter un carnet pour cette ~ ?', kanji:'この〜の回数券は買えますか' },
+  { theme:'transport', level:3, kana:'おくれはどのくらいですか',          romaji:'okure wa dono kurai desu ka',       fr:'Quel est le retard approximatif ?', kanji:'遅れはどのくらいですか' },
+  { theme:'transport', level:3, kana:'このへんにコインロッカーはありますか',romaji:'kono hen ni koin-rokkā wa arimasu ka',fr:'Y a-t-il des consignes automatiques par ici ?', kanji:'この辺にコインロッカーはありますか' },
+  { theme:'transport', level:3, kana:'じゆうせきですか、していせきですか', romaji:'jiyū-seki desu ka, shitei-seki desu ka', fr:'Place libre ou réservée ?', kanji:'自由席ですか、指定席ですか' },
+
+  // ── HÔTEL (niveau 1)
+  { theme:'hotel', level:1, kana:'ホテル',       romaji:'hoteru',       fr:'hôtel' },
+  { theme:'hotel', level:1, kana:'りょかん',     romaji:'ryokan',       fr:'auberge traditionnelle', kanji:'旅館' },
+  { theme:'hotel', level:1, kana:'へや',         romaji:'heya',         fr:'chambre', kanji:'部屋' },
+  { theme:'hotel', level:1, kana:'かぎ',         romaji:'kagi',         fr:'clé', kanji:'鍵' },
+  { theme:'hotel', level:1, kana:'よやく',       romaji:'yoyaku',       fr:'réservation', kanji:'予約' },
+  { theme:'hotel', level:1, kana:'チェックイン', romaji:'chekku-in',    fr:'check-in' },
+  { theme:'hotel', level:1, kana:'チェックアウト',romaji:'chekku-auto',  fr:'check-out' },
+  { theme:'hotel', level:1, kana:'おふろ',       romaji:'ofuro',        fr:'bain (baignoire)', kanji:'お風呂' },
+  { theme:'hotel', level:1, kana:'おんせん',     romaji:'onsen',        fr:'source thermale', kanji:'温泉' },
+  { theme:'hotel', level:1, kana:'あさごはん',   romaji:'asagohan',     fr:'petit-déjeuner', kanji:'朝御飯' },
+  { theme:'hotel', level:1, kana:'こんばん',     romaji:'konban',       fr:'ce soir', kanji:'今晩' },
+  { theme:'hotel', level:1, kana:'いっぱく',     romaji:'ippaku',       fr:'une nuit', kanji:'一泊' },
+  // niveau 2
+  { theme:'hotel', level:2, kana:'よやくがあります',                  romaji:'yoyaku ga arimasu',                   fr:'J\'ai une réservation', kanji:'予約があります' },
+  { theme:'hotel', level:2, kana:'へやをいちまよやくしています',       romaji:'heya o ichima yoyaku shite imasu',     fr:'J\'ai réservé une chambre', kanji:'部屋を一間予約しています' },
+  { theme:'hotel', level:2, kana:'チェックインはなんじですか',         romaji:'chekku-in wa nanji desu ka',           fr:'À quelle heure est le check-in ?', kanji:'チェックインは何時ですか' },
+  { theme:'hotel', level:2, kana:'インターネットはつかえますか',       romaji:'intānetto wa tsukaemasu ka',           fr:'Puis-je utiliser internet ?', kanji:'インターネットは使えますか' },
+  { theme:'hotel', level:2, kana:'おんせんはどこですか',               romaji:'onsen wa doko desu ka',                fr:'Où est le bain thermal ?', kanji:'温泉はどこですか' },
+  { theme:'hotel', level:2, kana:'もうひとばんとまれますか',           romaji:'mō hitoban tomaremasu ka',             fr:'Puis-je rester une nuit de plus ?', kanji:'もう一晩泊まれますか' },
+  { theme:'hotel', level:2, kana:'まくらをもうひとつください',         romaji:'makura o mō hitotsu kudasai',          fr:'Un oreiller supplémentaire, s.v.p.', kanji:'枕をもう一つください' },
+
+  // ── HÔTEL (niveau 3)
+  { theme:'hotel', level:3, kana:'レイトチェックアウトはできますか',     romaji:'reito chekku-auto wa dekimasu ka',  fr:'Le check-out tardif est-il possible ?', kanji:'レイトチェックアウトはできますか' },
+  { theme:'hotel', level:3, kana:'にもつをあずかってもらえますか',       romaji:'nimotsu o azukatte moraemasu ka',   fr:'Pouvez-vous garder mes bagages ?', kanji:'荷物を預かってもらえますか' },
+  { theme:'hotel', level:3, kana:'このへやからはなみがみえますか',       romaji:'kono heya kara hana-mi ga miemasu ka', fr:'La vue sur les fleurs est-elle visible depuis cette chambre ?', kanji:'この部屋から花見が見えますか' },
+  { theme:'hotel', level:3, kana:'ルームサービスをおねがいします',       romaji:'rūmu sābisu o onegaishimasu',       fr:'Je voudrais le room service', kanji:'ルームサービスをお願いします' },
+  { theme:'hotel', level:3, kana:'クーラーのつかいかたをおしえてください',romaji:'kūrā no tsukaikata o oshiete kudasai', fr:'Expliquez-moi comment utiliser la climatisation', kanji:'クーラーの使い方を教えてください' },
+  { theme:'shopping', level:1, kana:'みせ',       romaji:'mise',         fr:'magasin / boutique', kanji:'店' },
+  { theme:'shopping', level:1, kana:'いくら',     romaji:'ikura',        fr:'combien ça coûte ?', kanji:'幾ら' },
+  { theme:'shopping', level:1, kana:'やすい',     romaji:'yasui',        fr:'pas cher / bon marché', kanji:'安い' },
+  { theme:'shopping', level:1, kana:'たかい',     romaji:'takai',        fr:'cher / élevé', kanji:'高い' },
+  { theme:'shopping', level:1, kana:'おみやげ',   romaji:'omiyage',      fr:'souvenir / cadeau', kanji:'お土産' },
+  { theme:'shopping', level:1, kana:'ふくろ',     romaji:'fukuro',       fr:'sac', kanji:'袋' },
+  { theme:'shopping', level:1, kana:'げんきん',   romaji:'genkin',       fr:'espèces / cash', kanji:'現金' },
+  { theme:'shopping', level:1, kana:'クレジットカード',romaji:'kurejitto kādo',fr:'carte de crédit' },
+  { theme:'shopping', level:1, kana:'レシート',   romaji:'reshīto',      fr:'reçu' },
+  { theme:'shopping', level:1, kana:'へいてん',   romaji:'heiten',       fr:'fermeture', kanji:'閉店' },
+  { theme:'shopping', level:1, kana:'かいてん',   romaji:'kaiten',       fr:'ouverture', kanji:'開店' },
+  { theme:'shopping', level:1, kana:'ざっか',     romaji:'zakka',        fr:'quincaillerie / bazar', kanji:'雑貨' },
+  { theme:'shopping', level:1, kana:'ぜいこみ',   romaji:'zeikomi',      fr:'TTC (taxes incluses)', kanji:'税込み' },
+  // niveau 2
+  { theme:'shopping', level:2, kana:'これはいくらですか',     romaji:'kore wa ikura desu ka',      fr:'Combien coûte ceci ?', kanji:'これは幾らですか' },
+  { theme:'shopping', level:2, kana:'もうすこしやすくなりますか',romaji:'mō sukoshi yasuku narimasu ka',fr:'Pouvez-vous faire un petit geste ?', kanji:'もう少し安くなりますか' },
+  { theme:'shopping', level:2, kana:'これをください',          romaji:'kore o kudasai',             fr:'Je prends ceci, s.v.p.', kanji:'これを下さい' },
+  { theme:'shopping', level:2, kana:'ちがうサイズはありますか', romaji:'chigau saizu wa arimasu ka', fr:'Avez-vous une autre taille ?', kanji:'違うサイズはありますか' },
+  { theme:'shopping', level:2, kana:'みているだけです',         romaji:'mite iru dake desu',         fr:'Je regarde seulement', kanji:'見ているだけです' },
+  { theme:'shopping', level:2, kana:'つつんでもらえますか',     romaji:'tsutsunde moraemasu ka',     fr:'Pouvez-vous l\'emballer ?', kanji:'包んでもらえますか' },
+  { theme:'shopping', level:2, kana:'カードでしはらえますか',   romaji:'kādo de shiharaemasu ka',    fr:'Puis-je payer par carte ?', kanji:'カードで支払えますか' },
+
+  // ── SHOPPING (niveau 3 = avancé)
+  { theme:'shopping', level:3, kana:'めんぜいてんはどこですか',       romaji:'menzei-ten wa doko desu ka',           fr:'Où est la boutique hors-taxes ?', kanji:'免税店はどこですか' },
+  { theme:'shopping', level:3, kana:'めんぜいのてつづきをおしえてください', romaji:'menzei no tetsuzuki o oshiete kudasai', fr:'Expliquez-moi la procédure de détaxe', kanji:'免税の手続きを教えてください' },
+  { theme:'shopping', level:3, kana:'こちらをはこんでもらえますか',   romaji:'kochira o hakonde moraemasu ka',        fr:'Pouvez-vous me livrer ça ?', kanji:'こちらを運んでもらえますか' },
+  { theme:'shopping', level:3, kana:'〜のかいいんカードはありますか', romaji:'~ no kaiin kādo wa arimasu ka',         fr:'Avez-vous une carte fidélité ~ ?', kanji:'〜の会員カードはありますか' },
+  { theme:'shopping', level:3, kana:'おかいあげありがとうございます', romaji:'okai-age arigatō gozaimasu',            fr:'Merci de votre achat (formule vendeur)', kanji:'お買い上げありがとうございます' },
+
+  // ── SALUTATIONS (niveau 3)
+  { theme:'salutations', level:3, kana:'おかげさまで',                   romaji:'okage-sama de',                    fr:'Grâce à vous / je vais bien (formule polie)' },
+  { theme:'salutations', level:3, kana:'おじゃまします',                 romaji:'ojama shimasu',                    fr:'Permettez-moi d\'entrer / je vous dérange' },
+  { theme:'salutations', level:3, kana:'ごめんください',                 romaji:'gomen kudasai',                    fr:'Il y a quelqu\'un ? (en entrant)' },
+  { theme:'salutations', level:3, kana:'おせわになっております',         romaji:'osewa ni natte orimasu',           fr:'Merci pour tout ce que vous faites' },
+  { theme:'salutations', level:3, kana:'よかったらまたおはなしましょう', romaji:'yokattara mata ohanashi mashō',     fr:'Si vous voulez, parlons encore une fois' },
+  { theme:'salutations', level:3, kana:'にほんはいかがですか',           romaji:'nihon wa ikaga desu ka',            fr:'Comment trouvez-vous le Japon ?' },
+  { theme:'salutations', level:3, kana:'どうぞよろしくおつたえください', romaji:'dōzo yoroshiku otsutae kudasai',   fr:'Transmettez mes amitiés s.v.p.' },
+
+  // ── RESTAURANT (niveau 3)
+  { theme:'restaurant', level:3, kana:'このりょうりにはなにがはいっていますか', romaji:'kono ryōri ni wa nani ga haitte imasu ka', fr:'Quels sont les ingrédients de ce plat ?' },
+  { theme:'restaurant', level:3, kana:'にくなしでつくれますか',         romaji:'niku nashi de tsukuremasu ka',     fr:'Pouvez-vous le faire sans viande ?' },
+  { theme:'restaurant', level:3, kana:'おまかせコースをおねがいします', romaji:'omakase kōsu o onegaishimasu',     fr:'Le menu omakase, s.v.p.' },
+  { theme:'restaurant', level:3, kana:'ざしきせきはありますか',         romaji:'zashiki-seki wa arimasu ka',       fr:'Avez-vous des tables en tatami ?' },
+  { theme:'restaurant', level:3, kana:'のみほうだいはありますか',       romaji:'nomihōdai wa arimasu ka',          fr:'Avez-vous une formule à volonté à boire ?' },
+  { theme:'restaurant', level:3, kana:'きょうのおすすめはなんですか',   romaji:'kyō no osusume wa nan desu ka',    fr:'Quelle est la spécialité du jour ?' },
+
+  // ── TRANSPORT (niveau 3)
+  { theme:'transport', level:3, kana:'〜いきのじゅうじかんをおしえてください', romaji:'~ yuki no jūjikan o oshiete kudasai', fr:'Donnez-moi l\'heure de départ pour ~' },
+  { theme:'transport', level:3, kana:'この〜のかいすうけんはかえますか',  romaji:'kono ~ no kaisūken wa kaemasu ka',  fr:'Puis-je acheter un carnet pour cette ~ ?' },
+  { theme:'transport', level:3, kana:'おくれはどのくらいですか',          romaji:'okure wa dono kurai desu ka',       fr:'Quel est le retard approximatif ?' },
+  { theme:'transport', level:3, kana:'このへんにコインロッカーはありますか',romaji:'kono hen ni koin-rokkā wa arimasu ka',fr:'Y a-t-il des consignes automatiques par ici ?' },
+  { theme:'transport', level:3, kana:'じゆうせきですか、していせきですか', romaji:'jiyū-seki desu ka, shitei-seki desu ka', fr:'Place libre ou réservée ?' },
+
+  // ── HÔTEL (niveau 3)
+  { theme:'hotel', level:3, kana:'レイトチェックアウトはできますか',     romaji:'reito chekku-auto wa dekimasu ka',  fr:'Le check-out tardif est-il possible ?' },
+  { theme:'hotel', level:3, kana:'にもつをあずかってもらえますか',       romaji:'nimotsu o azukatte moraemasu ka',   fr:'Pouvez-vous garder mes bagages ?' },
+  { theme:'hotel', level:3, kana:'このへやからはなみがみえますか',       romaji:'kono heya kara hana-mi ga miemasu ka', fr:'La vue sur les fleurs est-elle visible depuis cette chambre ?' },
+  { theme:'hotel', level:3, kana:'ルームサービスをおねがいします',       romaji:'rūmu sābisu o onegaishimasu',       fr:'Je voudrais le room service' },
+  { theme:'hotel', level:3, kana:'クーラーのつかいかたをおしえてください',romaji:'kūrā no tsukaikata o oshiete kudasai', fr:'Expliquez-moi comment utiliser la climatisation' },
+
+  // ── SANTÉ / URGENCES (niveau 1 = mots essentiels)
+  { theme:'sante', level:1, kana:'いたい',         romaji:'itai',           fr:'ça fait mal / j\'ai mal', kanji:'痛い' },
+  { theme:'sante', level:1, kana:'びょういん',     romaji:'byōin',          fr:'hôpital', kanji:'病院' },
+  { theme:'sante', level:1, kana:'くすり',         romaji:'kusuri',         fr:'médicament', kanji:'薬' },
+  { theme:'sante', level:1, kana:'きゅうきゅうしゃ',romaji:'kyūkyūsha',      fr:'ambulance', kanji:'救急車' },
+  { theme:'sante', level:1, kana:'けいさつ',       romaji:'keisatsu',       fr:'police', kanji:'警察' },
+  { theme:'sante', level:1, kana:'たすけて',       romaji:'tasukete',       fr:'Au secours ! / Aidez-moi !', kanji:'助けて' },
+  { theme:'sante', level:1, kana:'ねつ',           romaji:'netsu',          fr:'fièvre', kanji:'熱' },
+  { theme:'sante', level:1, kana:'ずつう',         romaji:'zutsū',          fr:'mal de tête', kanji:'頭痛' },
+  { theme:'sante', level:1, kana:'きぶんがわるい', romaji:'kibun ga warui', fr:'je me sens mal', kanji:'気分が悪い' },
+  { theme:'sante', level:1, kana:'アレルギー',     romaji:'arerugī',        fr:'allergie' },
+  { theme:'sante', level:1, kana:'きず',           romaji:'kizu',           fr:'blessure / plaie', kanji:'傷' },
+  { theme:'sante', level:1, kana:'はきけ',         romaji:'hakike',         fr:'nausée', kanji:'吐き気' },
+  { theme:'sante', level:1, kana:'めまい',         romaji:'memai',          fr:'vertige / étourdissement', kanji:'目眩' },
+  // niveau 2
+  { theme:'sante', level:2, kana:'きゅうきゅうをよんでください',     romaji:'kyūkyū o yonde kudasai',        fr:'Appelez le 119 (urgences), s.v.p.', kanji:'救急を呼んでください' },
+  { theme:'sante', level:2, kana:'ちかくのびょういんはどこですか',   romaji:'chikaku no byōin wa doko desu ka', fr:'Où est l\'hôpital le plus proche ?', kanji:'近くの病院はどこですか' },
+  { theme:'sante', level:2, kana:'にほんごのわかるいしゃはいますか', romaji:'nihongo no wakaru isha wa imasu ka', fr:'Y a-t-il un médecin parlant anglais/français ?', kanji:'日本語の分かる医者はいますか' },
+  { theme:'sante', level:2, kana:'ここがいたいです',                 romaji:'koko ga itai desu',              fr:'J\'ai mal ici', kanji:'ここが痛いです' },
+  { theme:'sante', level:2, kana:'このくすりをのんでもいいですか',   romaji:'kono kusuri o nonde mo ii desu ka', fr:'Puis-je prendre ce médicament ?', kanji:'この薬を飲んでもいいですか' },
+  { theme:'sante', level:2, kana:'パスポートをなくしました',         romaji:'pasupōto o nakushimashita',      fr:'J\'ai perdu mon passeport', kanji:'パスポートを無くしました' },
+  { theme:'sante', level:2, kana:'ほけんしょうはつかえますか',       romaji:'hoken-shō wa tsukaemasu ka',     fr:'Mon assurance est-elle acceptée ?', kanji:'保険証は使えますか' },
+  { theme:'sante', level:2, kana:'どろぼうにあいました',             romaji:'dorobō ni aimashita',            fr:'J\'ai été volé(e)', kanji:'泥棒に遭いました' },
+  // niveau 3
+  { theme:'sante', level:3, kana:'かにアレルギーがあるのでえびもたべられません', romaji:'kani arerugī ga aru no de ebi mo taberaremasen', fr:'J\'ai une allergie aux crabes, donc je ne peux pas manger de crevettes non plus', kanji:'蟹アレルギーがあるので海老も食べられません' },
+  { theme:'sante', level:3, kana:'じゅしんひのりょうしゅうしょをいただけますか', romaji:'jūshin-hi no ryōshūsho o itadakemasu ka',        fr:'Puis-je avoir un reçu pour les frais de consultation ?', kanji:'受診費の領収書を頂けますか' },
+  { theme:'sante', level:3, kana:'たびほけんのてつづきをしたいのですが',         romaji:'tabi-hoken no tetsuzuki o shitai no desu ga',     fr:'Je souhaite faire une déclaration pour mon assurance voyage', kanji:'旅行保険の手続きをしたいのですが' },
+  { theme:'sante', level:3, kana:'ふんしつとどけをだしたいのですが',             romaji:'funshitsu-todoke o dashitai no desu ga',          fr:'Je voudrais déposer une déclaration de perte', kanji:'紛失届を出したいのですが' },
+  { theme:'sante', level:3, kana:'にゅういんがひつようですか',                   romaji:'nyūin ga hitsuyō desu ka',                        fr:'Dois-je être hospitalisé(e) ?', kanji:'入院が必要ですか' },
+
+  // ══════════════════════════════════════════════════════
+  //  MOTS-OUTILS — adverbes, particules, mots de liaison
+  // ══════════════════════════════════════════════════════
+
+  // niveau 1 : particules et adverbes de base
+  { theme:'grammar', level:1, kana:'は',         romaji:'wa',          fr:'particule de thème (sujet du discours)' },
+  { theme:'grammar', level:1, kana:'が',         romaji:'ga',          fr:'particule de sujet (mise en relief)' },
+  { theme:'grammar', level:1, kana:'を',         romaji:'o',           fr:'particule d\'objet direct' },
+  { theme:'grammar', level:1, kana:'に',         romaji:'ni',          fr:'particule de lieu / direction / heure' },
+  { theme:'grammar', level:1, kana:'で',         romaji:'de',          fr:'particule de lieu d\'action / moyen' },
+  { theme:'grammar', level:1, kana:'の',         romaji:'no',          fr:'particule de possession / appartenance' },
+  { theme:'grammar', level:1, kana:'と',         romaji:'to',          fr:'et (énumération) / avec (compagnie)' },
+  { theme:'grammar', level:1, kana:'も',         romaji:'mo',          fr:'aussi / également' },
+  { theme:'grammar', level:1, kana:'か',         romaji:'ka',          fr:'particule interrogative (?)' },
+  { theme:'grammar', level:1, kana:'ね',         romaji:'ne',          fr:'n\'est-ce pas ? (recherche d\'accord)' },
+  { theme:'grammar', level:1, kana:'よ',         romaji:'yo',          fr:'particule d\'assertion (j\'insiste)' },
+  { theme:'grammar', level:1, kana:'へ',         romaji:'e',           fr:'particule de direction (vers)' },
+  { theme:'grammar', level:1, kana:'から',       romaji:'kara',        fr:'depuis / à partir de / parce que' },
+  { theme:'grammar', level:1, kana:'まで',       romaji:'made',        fr:'jusqu\'à / jusqu\'au moment où' },
+  { theme:'grammar', level:1, kana:'でも',       romaji:'demo',        fr:'mais / cependant' },
+  { theme:'grammar', level:1, kana:'そして',     romaji:'soshite',     fr:'et puis / ensuite' },
+  { theme:'grammar', level:1, kana:'でも',       romaji:'demo',        fr:'mais / pourtant' },
+  { theme:'grammar', level:1, kana:'だから',     romaji:'dakara',      fr:'donc / c\'est pourquoi' },
+
+  // niveau 1 : adverbes courants
+  { theme:'grammar', level:1, kana:'とても',     romaji:'totemo',      fr:'très / vraiment' },
+  { theme:'grammar', level:1, kana:'すこし',     romaji:'sukoshi',     fr:'un peu / légèrement' },
+  { theme:'grammar', level:1, kana:'たくさん',   romaji:'takusan',     fr:'beaucoup / en grande quantité' },
+  { theme:'grammar', level:1, kana:'もう',       romaji:'mō',          fr:'déjà / encore (selon contexte)' },
+  { theme:'grammar', level:1, kana:'まだ',       romaji:'mada',        fr:'encore / pas encore' },
+  { theme:'grammar', level:1, kana:'もっと',     romaji:'motto',       fr:'davantage / encore plus' },
+  { theme:'grammar', level:1, kana:'いちばん',   romaji:'ichiban',     fr:'le plus / numéro un' },
+  { theme:'grammar', level:1, kana:'ぜんぜん',   romaji:'zenzen',      fr:'pas du tout (+ négatif)' },
+  { theme:'grammar', level:1, kana:'たぶん',     romaji:'tabun',       fr:'probablement / peut-être' },
+  { theme:'grammar', level:1, kana:'きっと',     romaji:'kitto',       fr:'sûrement / sans aucun doute' },
+  { theme:'grammar', level:1, kana:'やっぱり',   romaji:'yappari',     fr:'comme je le pensais / comme prévu' },
+  { theme:'grammar', level:1, kana:'すぐ',       romaji:'sugu',        fr:'tout de suite / immédiatement' },
+  { theme:'grammar', level:1, kana:'ゆっくり',   romaji:'yukkuri',     fr:'lentement / doucement' },
+  { theme:'grammar', level:1, kana:'はやく',     romaji:'hayaku',      fr:'vite / tôt' },
+  { theme:'grammar', level:1, kana:'いつも',     romaji:'itsumo',      fr:'toujours / d\'habitude' },
+  { theme:'grammar', level:1, kana:'ときどき',   romaji:'tokidoki',    fr:'parfois / de temps en temps' },
+
+  // niveau 2 : locutions et connecteurs de phrases
+  { theme:'grammar', level:2, kana:'〜てから',       romaji:'~ te kara',         fr:'après avoir fait ~ (séquence)', kanji:'〜てから' },
+  { theme:'grammar', level:2, kana:'〜ながら',       romaji:'~ nagara',          fr:'tout en faisant ~ (simultané)', kanji:'〜ながら' },
+  { theme:'grammar', level:2, kana:'〜たり〜たりする',romaji:'~ tari ~ tari suru',fr:'faire tantôt ~ tantôt ~ (liste d\'actions)', kanji:'〜たり〜たりする' },
+  { theme:'grammar', level:2, kana:'〜と思います',   romaji:'~ to omoimasu',     fr:'je pense que ~ / il me semble que ~', kanji:'〜と思います' },
+  { theme:'grammar', level:2, kana:'〜かもしれません',romaji:'~ kamoshiremasen',  fr:'c\'est peut-être ~ / il se peut que ~', kanji:'〜かもしれません' },
+  { theme:'grammar', level:2, kana:'〜でしょう',     romaji:'~ deshō',           fr:'ce sera probablement ~ (conjecture polie)', kanji:'〜でしょう' },
+  { theme:'grammar', level:2, kana:'〜けど',         romaji:'~ kedo',            fr:'~ mais… / ~ or… (tournure douce)', kanji:'〜けど' },
+  { theme:'grammar', level:2, kana:'〜ので',         romaji:'~ no de',           fr:'parce que ~ / comme ~ (cause objective)', kanji:'〜ので' },
+  { theme:'grammar', level:2, kana:'〜のに',         romaji:'~ no ni',           fr:'pourtant ~ / bien que ~ (contraste)', kanji:'〜のに' },
+  { theme:'grammar', level:2, kana:'〜ばかり',       romaji:'~ bakari',          fr:'rien que ~ / seulement ~ / vient juste de ~', kanji:'〜ばかり' },
+  { theme:'grammar', level:2, kana:'〜ほど',         romaji:'~ hodo',            fr:'autant que ~ / à mesure que ~', kanji:'〜ほど' },
+  { theme:'grammar', level:2, kana:'なぜなら〜から', romaji:'nazenara ~ kara',   fr:'la raison est que ~ (explication formelle)', kanji:'何故なら〜から' },
+  { theme:'grammar', level:2, kana:'それで',         romaji:'sorede',            fr:'alors / c\'est pour ça que', kanji:'それで' },
+  { theme:'grammar', level:2, kana:'つまり',         romaji:'tsumari',           fr:'autrement dit / en d\'autres termes', kanji:'つまり' },
+  { theme:'grammar', level:2, kana:'たとえば',       romaji:'tatoeba',           fr:'par exemple', kanji:'例えば' },
+
+  // niveau 3 : nuances et registre avancé
+  { theme:'grammar', level:3, kana:'〜にもかかわらず',romaji:'~ ni mo kakawarazu', fr:'malgré ~ / en dépit de ~', kanji:'〜にも関わらず' },
+  { theme:'grammar', level:3, kana:'〜としては',      romaji:'~ toshite wa',      fr:'en tant que ~ / du point de vue de ~', kanji:'〜としては' },
+  { theme:'grammar', level:3, kana:'〜に対して',      romaji:'~ ni taishite',     fr:'envers ~ / par rapport à ~ / en réponse à ~', kanji:'〜に対して' },
+  { theme:'grammar', level:3, kana:'〜によると',      romaji:'~ ni yoru to',      fr:'selon ~ / d\'après ~', kanji:'〜によると' },
+  { theme:'grammar', level:3, kana:'〜をはじめとして',romaji:'~ o hajime toshite',fr:'~ et notamment / ~ entre autres', kanji:'〜を始めとして' },
+  { theme:'grammar', level:3, kana:'〜においては',    romaji:'~ ni oite wa',      fr:'dans le domaine de ~ / en ce qui concerne ~', kanji:'〜においては' },
+  { theme:'grammar', level:3, kana:'さらに',          romaji:'sara ni',           fr:'de plus / qui plus est / en outre', kanji:'更に' },
+  { theme:'grammar', level:3, kana:'いっぽうで',      romaji:'ippō de',           fr:'d\'un autre côté / en même temps', kanji:'一方で' },
+
+  // ══════════════════════════════════════════════════════
+  //  COMPTEURS — nombres, jours, heures
+  // ══════════════════════════════════════════════════════
+
+  // niveau 1 : nombres de base
+  { theme:'compteurs', level:1, kana:'いち',     romaji:'ichi',    fr:'1' },
+  { theme:'compteurs', level:1, kana:'に',       romaji:'ni',      fr:'2' },
+  { theme:'compteurs', level:1, kana:'さん',     romaji:'san',     fr:'3' },
+  { theme:'compteurs', level:1, kana:'し／よん', romaji:'shi / yon', fr:'4' },
+  { theme:'compteurs', level:1, kana:'ご',       romaji:'go',      fr:'5' },
+  { theme:'compteurs', level:1, kana:'ろく',     romaji:'roku',    fr:'6' },
+  { theme:'compteurs', level:1, kana:'しち／なな',romaji:'shichi / nana', fr:'7' },
+  { theme:'compteurs', level:1, kana:'はち',     romaji:'hachi',   fr:'8' },
+  { theme:'compteurs', level:1, kana:'きゅう／く',romaji:'kyū / ku', fr:'9' },
+  { theme:'compteurs', level:1, kana:'じゅう',   romaji:'jū',      fr:'10' },
+  { theme:'compteurs', level:1, kana:'ひゃく',   romaji:'hyaku',   fr:'100' },
+  { theme:'compteurs', level:1, kana:'せん',     romaji:'sen',     fr:'1 000' },
+  { theme:'compteurs', level:1, kana:'まん',     romaji:'man',     fr:'10 000' },
+  { theme:'compteurs', level:1, kana:'じゅうまん',romaji:'jūman',   fr:'100 000' },
+
+  // niveau 1 : jours de la semaine
+  { theme:'compteurs', level:1, kana:'にちようび', romaji:'nichi-yōbi', fr:'dimanche' },
+  { theme:'compteurs', level:1, kana:'げつようび', romaji:'getsu-yōbi', fr:'lundi' },
+  { theme:'compteurs', level:1, kana:'かようび',   romaji:'ka-yōbi',    fr:'mardi' },
+  { theme:'compteurs', level:1, kana:'すいようび', romaji:'sui-yōbi',   fr:'mercredi' },
+  { theme:'compteurs', level:1, kana:'もくようび', romaji:'moku-yōbi',  fr:'jeudi' },
+  { theme:'compteurs', level:1, kana:'きんようび', romaji:'kin-yōbi',   fr:'vendredi' },
+  { theme:'compteurs', level:1, kana:'どようび',   romaji:'do-yōbi',    fr:'samedi' },
+
+  // niveau 1 : heures et moments
+  { theme:'compteurs', level:1, kana:'〜じ',       romaji:'~ ji',        fr:'~ heure(s) (ex. さんじ = 3h)' },
+  { theme:'compteurs', level:1, kana:'〜ふん／ぷん',romaji:'~ fun / pun', fr:'~ minute(s)' },
+  { theme:'compteurs', level:1, kana:'ごぜん',     romaji:'gozen',       fr:'matin (AM)' },
+  { theme:'compteurs', level:1, kana:'ごご',       romaji:'gogo',        fr:'après-midi (PM)' },
+  { theme:'compteurs', level:1, kana:'きょう',     romaji:'kyō',         fr:'aujourd\'hui' },
+  { theme:'compteurs', level:1, kana:'きのう',     romaji:'kinō',        fr:'hier' },
+  { theme:'compteurs', level:1, kana:'あした',     romaji:'ashita',      fr:'demain' },
+  { theme:'compteurs', level:1, kana:'あさ',       romaji:'asa',         fr:'matin' },
+  { theme:'compteurs', level:1, kana:'ひる',       romaji:'hiru',        fr:'midi / après-midi' },
+  { theme:'compteurs', level:1, kana:'よる',       romaji:'yoru',        fr:'soir / nuit' },
+
+  // niveau 2 : compteurs spéciaux
+  { theme:'compteurs', level:2, kana:'〜まい',       romaji:'~ mai',       fr:'compteur de choses plates (billets, feuilles…)', kanji:'〜枚' },
+  { theme:'compteurs', level:2, kana:'〜ほん',       romaji:'~ hon',       fr:'compteur de choses longues (bouteilles, stylos…)', kanji:'〜本' },
+  { theme:'compteurs', level:2, kana:'〜さつ',       romaji:'~ satsu',     fr:'compteur de livres, cahiers', kanji:'〜冊' },
+  { theme:'compteurs', level:2, kana:'〜だい',       romaji:'~ dai',       fr:'compteur de machines, véhicules', kanji:'〜台' },
+  { theme:'compteurs', level:2, kana:'〜はい',       romaji:'~ hai',       fr:'compteur de verres, tasses (boissons)', kanji:'〜杯' },
+  { theme:'compteurs', level:2, kana:'〜にん',       romaji:'~ nin',       fr:'compteur de personnes (sauf 1 et 2)', kanji:'〜人' },
+  { theme:'compteurs', level:2, kana:'ひとり',       romaji:'hitori',      fr:'1 personne', kanji:'一人' },
+  { theme:'compteurs', level:2, kana:'ふたり',       romaji:'futari',      fr:'2 personnes', kanji:'二人' },
+  { theme:'compteurs', level:2, kana:'〜かい',       romaji:'~ kai',       fr:'étage / fois (occurrence)', kanji:'〜回／〜階' },
+  { theme:'compteurs', level:2, kana:'〜かげつ',     romaji:'~ kagetsu',   fr:'~ mois (durée)', kanji:'〜か月' },
+  { theme:'compteurs', level:2, kana:'〜ねん',       romaji:'~ nen',       fr:'~ an(s) / année ~', kanji:'〜年' },
+  { theme:'compteurs', level:2, kana:'〜にち',       romaji:'~ nichi',     fr:'~ du mois / ~ jour(s)', kanji:'〜日' },
+  { theme:'compteurs', level:2, kana:'いつか',       romaji:'itsuka',      fr:'le 5 du mois (irrégulier)', kanji:'五日' },
+  { theme:'compteurs', level:2, kana:'とおか',       romaji:'tōka',        fr:'le 10 du mois (irrégulier)', kanji:'十日' },
+  { theme:'compteurs', level:2, kana:'はつか',       romaji:'hatsuka',     fr:'le 20 du mois (irrégulier)', kanji:'二十日' },
+
+  // niveau 2 : expressions de temps utiles en voyage
+  { theme:'compteurs', level:2, kana:'〜じかん',     romaji:'~ jikan',     fr:'~ heure(s) (durée)', kanji:'〜時間' },
+  { theme:'compteurs', level:2, kana:'〜ふつか',     romaji:'~ futsuka',   fr:'2 jours (durée, irrégulier)', kanji:'二日' },
+  { theme:'compteurs', level:2, kana:'せんしゅう',   romaji:'senshū',      fr:'la semaine dernière', kanji:'先週' },
+  { theme:'compteurs', level:2, kana:'らいしゅう',   romaji:'raishū',      fr:'la semaine prochaine', kanji:'来週' },
+  { theme:'compteurs', level:2, kana:'〜じごろ',     romaji:'~ ji goro',   fr:'vers ~ heures (approximatif)', kanji:'〜時頃' },
+  { theme:'compteurs', level:2, kana:'〜じはん',     romaji:'~ ji han',    fr:'~ heure et demie', kanji:'〜時半' },
+
+  // niveau 3 : grands nombres, mois, et compteurs rares
+  { theme:'compteurs', level:3, kana:'おく',           romaji:'oku',           fr:'100 millions (échelle japonaise)', kanji:'億' },
+  { theme:'compteurs', level:3, kana:'いちがつ',       romaji:'ichi-gatsu',    fr:'janvier (1er mois)', kanji:'一月' },
+  { theme:'compteurs', level:3, kana:'にがつ',         romaji:'ni-gatsu',      fr:'février', kanji:'二月' },
+  { theme:'compteurs', level:3, kana:'さんがつ',       romaji:'san-gatsu',     fr:'mars', kanji:'三月' },
+  { theme:'compteurs', level:3, kana:'しがつ',         romaji:'shi-gatsu',     fr:'avril', kanji:'四月' },
+  { theme:'compteurs', level:3, kana:'ごがつ',         romaji:'go-gatsu',      fr:'mai', kanji:'五月' },
+  { theme:'compteurs', level:3, kana:'ろくがつ',       romaji:'roku-gatsu',    fr:'juin', kanji:'六月' },
+  { theme:'compteurs', level:3, kana:'しちがつ',       romaji:'shichi-gatsu',  fr:'juillet', kanji:'七月' },
+  { theme:'compteurs', level:3, kana:'はちがつ',       romaji:'hachi-gatsu',   fr:'août', kanji:'八月' },
+  { theme:'compteurs', level:3, kana:'くがつ',         romaji:'ku-gatsu',      fr:'septembre', kanji:'九月' },
+  { theme:'compteurs', level:3, kana:'じゅうがつ',     romaji:'jū-gatsu',      fr:'octobre', kanji:'十月' },
+  { theme:'compteurs', level:3, kana:'じゅういちがつ', romaji:'jūichi-gatsu',  fr:'novembre', kanji:'十一月' },
+  { theme:'compteurs', level:3, kana:'じゅうにがつ',   romaji:'jūni-gatsu',    fr:'décembre', kanji:'十二月' },
+  { theme:'compteurs', level:3, kana:'〜ひき',         romaji:'~ hiki',        fr:'compteur d\'animaux (petits et moyens)', kanji:'〜匹' },
+  { theme:'compteurs', level:3, kana:'〜とう',         romaji:'~ tō',          fr:'compteur de grands animaux', kanji:'〜頭' },
+  { theme:'compteurs', level:3, kana:'〜そく',         romaji:'~ soku',        fr:'compteur de paires (chaussures, chaussettes)', kanji:'〜足' },
+  { theme:'compteurs', level:3, kana:'〜ちょう',       romaji:'~ chō',         fr:'compteur de choses pliées (vêtements, cartes)', kanji:'〜丁' },
+  { theme:'compteurs', level:3, kana:'わごえい',       romaji:'wa・go・ei',    fr:'japonais natif / sino-japonais / emprunts (3 systèmes de comptage)', kanji:'和語・漢語・英語' },
+];
+
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+let currentTheme = 'all';
+let currentLevel = 'all';
+let currentMode  = 'flash';
+let deck = [];
+let idx  = 0;
+let isFlipped = false;
+let okCount = 0;
+let koCount = 0;
+// quiz
+let qDeck = [];
+let qIdx  = 0;
+let qOk   = 0;
+let qKo   = 0;
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+function init() {
+  buildThemeNav();
+  setTheme('all');
+}
+
+function buildThemeNav() {
+  const nav = document.getElementById('theme-nav');
+  nav.innerHTML = '';
+  THEMES.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'theme-tab' + (t.id === currentTheme ? ' active' : '');
+    btn.style.setProperty('--theme-color', t.color);
+    btn.innerHTML = `<span class="theme-icon">${t.icon}</span>${t.label}`;
+    btn.onclick = () => setTheme(t.id);
+    nav.appendChild(btn);
+  });
+}
+
+function setTheme(id) {
+  currentTheme = id;
+  buildThemeNav();
+  const color = THEMES.find(t=>t.id===id).color;
+  document.documentElement.style.setProperty('--theme-color', color);
+  if(currentMode === 'list') buildList();
+  else buildDeck();
+}
+
+function setLevel(l) {
+  currentLevel = l;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('lvl-' + l).classList.add('active');
+  if(currentMode === 'list') buildList();
+  else buildDeck();
+}
+
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-mode-' + m).classList.add('active');
+  document.getElementById('flash-mode').style.display = m === 'flash' ? '' : 'none';
+  document.getElementById('quiz-mode').style.display  = m === 'quiz'  ? '' : 'none';
+  document.getElementById('list-mode').style.display  = m === 'list'  ? '' : 'none';
+  if(m === 'list') buildList();
+  else buildDeck();
+}
+
+function buildDeck() {
+  let filtered = currentTheme === 'all'
+    ? CARDS.slice()
+    : CARDS.filter(c => c.theme === currentTheme);
+  if(currentLevel !== 'all') filtered = filtered.filter(c => c.level === parseInt(currentLevel));
+  deck = shuffle(filtered);
+  idx = 0; okCount = 0; koCount = 0; isFlipped = false;
+  updateStats();
+  if(currentMode === 'flash') {
+    document.getElementById('done-screen').classList.remove('visible');
+    showCard();
+  } else if(currentMode === 'quiz') {
+    qDeck = shuffle(filtered); qIdx = 0; qOk = 0; qKo = 0;
+    document.getElementById('q-done-screen').classList.remove('visible');
+    document.getElementById('quiz-options').style.display = 'grid';
+    showQuizCard();
+  }
+}
+
+function shuffle(arr) { return arr.slice().sort(() => Math.random() - .5); }
+
+// Taille de police adaptive selon longueur du kana
+function kanaFontSize(text) {
+  const len = text.replace(/[〜～]/g, '').length;
+  if (len <= 4)  return 'clamp(2.8rem, 8vw, 4.5rem)';
+  if (len <= 8)  return 'clamp(2rem,   6vw, 3.2rem)';
+  if (len <= 14) return 'clamp(1.5rem, 4vw, 2.2rem)';
+  if (len <= 20) return 'clamp(1.2rem, 3vw, 1.7rem)';
+  return 'clamp(1rem, 2.5vw, 1.4rem)';
+}
+
+function kanaSmallFontSize(text) {
+  const len = text.replace(/[〜～]/g, '').length;
+  if (len <= 4)  return '1.6rem';
+  if (len <= 8)  return '1.35rem';
+  if (len <= 14) return '1.2rem';
+  if (len <= 20) return '1.05rem';
+  return '.95rem';
+}
+
+function romajiSize(text) {
+  const len = text.length;
+  if (len <= 8)  return '2.2rem';
+  if (len <= 16) return '1.9rem';
+  if (len <= 26) return '1.6rem';
+  if (len <= 38) return '1.35rem';
+  return '1.2rem';
+}
+
+// ═══════════════════════════════════════
+//  FLASH MODE
+// ═══════════════════════════════════════
+function showCard() {
+  if(deck.length === 0) return;
+  if(idx >= deck.length) { showDone(); return; }
+  const c = deck[idx];
+  const ci = document.getElementById('card-inner');
+  ci.classList.remove('flipped');
+  isFlipped = false;
+
+  const themeColor = THEMES.find(t=>t.id===c.theme).color;
+  const themeLabel = THEMES.find(t=>t.id===c.theme).label;
+
+  const fs = kanaFontSize(c.kana);
+
+  document.getElementById('card-front').innerHTML = `
+    <span class="card-theme-badge">${themeLabel}</span>
+    <span class="card-level-badge">${c.level === 1 ? 'Débutant' : c.level === 2 ? 'Intermédiaire' : 'Avancé'}</span>
+    <div class="card-kana" style="font-size:${fs}">${c.kana}</div>
+    ${c.kanji && c.kanji !== c.kana ? `<div class="card-kanji">${c.kanji}</div>` : ''}
+    <button class="card-audio-btn" title="Écouter" onclick="event.stopPropagation();speakJP('${c.kana.replace(/'/g,"\\'")}',this)">♪</button>
+  `;
+  document.getElementById('card-front').style.setProperty('--theme-color', themeColor);
+
+  document.getElementById('card-back').innerHTML = `
+    <span class="card-theme-badge">${themeLabel}</span>
+    <div class="card-romaji" style="font-size:${romajiSize(c.romaji)}">${c.romaji}</div>
+    <div class="card-fr">${c.fr}</div>
+    <div class="card-kana-small" style="font-size:${kanaSmallFontSize(c.kana)}">${c.kana}</div>
+    ${c.kanji && c.kanji !== c.kana ? `<div class="card-kanji">${c.kanji}</div>` : ''}
+    <button class="card-audio-btn" title="Écouter" onclick="event.stopPropagation();speakJP('${c.kana.replace(/'/g,"\\'")}',this)">♪</button>
+  `;
+  document.getElementById('card-back').style.setProperty('--theme-color', themeColor);
+
+  document.getElementById('ctrl-flip').style.display = 'flex';
+  document.getElementById('ctrl-answer').style.display = 'none';
+  document.getElementById('tap-hint').textContent = 'Cliquez pour retourner';
+
+  const pct = Math.round((idx / deck.length) * 100);
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = (idx+1) + ' / ' + deck.length;
+  document.getElementById('nav-count').textContent = (idx+1) + ' / ' + deck.length;
+  updateStats();
+}
+
+function flipCard() {
+  if(deck.length === 0 || idx >= deck.length) return;
+  const ci = document.getElementById('card-inner');
+  if(!isFlipped) {
+    ci.classList.add('flipped');
+    isFlipped = true;
+    document.getElementById('ctrl-flip').style.display = 'none';
+    document.getElementById('ctrl-answer').style.display = 'flex';
+    document.getElementById('tap-hint').textContent = 'Tu te souvenais ?';
+    // Énonciation automatique au retournement
+    if(deck[idx]) speakJP(deck[idx].kana);
+  }
+}
+
+function answer(ok) {
+  if(ok) okCount++; else koCount++;
+  idx++;
+  updateStats();
+  showCard();
+}
+
+function prevCard() {
+  if(idx > 0) { idx--; showCard(); }
+}
+
+function nextCard() {
+  if(idx < deck.length - 1) { idx++; isFlipped = false; showCard(); }
+  else showDone();
+}
+
+function showDone() {
+  document.getElementById('done-screen').classList.add('visible');
+  document.getElementById('ctrl-flip').style.display = 'none';
+  document.getElementById('ctrl-answer').style.display = 'none';
+  document.getElementById('prog-bar').style.width = '100%';
+  const total = okCount + koCount;
+  const pct = total > 0 ? Math.round((okCount / total) * 100) : 0;
+  document.getElementById('done-pct').textContent = pct + '%';
+  const msgs = {
+    high: ['素晴らしい！ — Excellent travail, vous maîtrisez ce thème !', 'すごい！ — Impressionnant, continuez comme ça !'],
+    mid:  ['がんばれ！ — Bien, encore un peu de pratique et vous y êtes.', 'もう少し！ — Presque là, relancez pour consolider.'],
+    low:  ['また練習してください — Revoyez ce thème, la pratique paie !', 'ファイト！ — Courage, recommencez pour progresser.'],
+  };
+  const bucket = pct >= 80 ? 'high' : pct >= 50 ? 'mid' : 'low';
+  document.getElementById('done-msg').textContent = msgs[bucket][Math.floor(Math.random()*2)];
+}
+
+function restart() {
+  document.getElementById('done-screen').classList.remove('visible');
+  buildDeck();
+}
+
+// ═══════════════════════════════════════
+//  QUIZ MODE
+// ═══════════════════════════════════════
+function showQuizCard() {
+  if(qIdx >= qDeck.length) { showQDone(); return; }
+  const c = qDeck[qIdx];
+  const themeColor = THEMES.find(t=>t.id===c.theme).color;
+  document.getElementById('q-card-front').innerHTML = `
+    <span class="card-theme-badge">${THEMES.find(t=>t.id===c.theme).label}</span>
+    <span class="card-level-badge">${c.level===1?'Débutant':c.level===2?'Intermédiaire':'Avancé'}</span>
+    <div class="card-kana" style="font-size:${kanaFontSize(c.kana)}">${c.kana}</div>
+    ${c.kanji && c.kanji !== c.kana ? `<div class="card-kanji">${c.kanji}</div>` : ''}
+    <button class="card-audio-btn" title="Écouter" onclick="event.stopPropagation();speakJP('${c.kana.replace(/'/g,"\\'")}',this)">♪</button>
+  `;
+  document.getElementById('q-card-front').style.setProperty('--theme-color', themeColor);
+
+  // 3 mauvaises réponses (même thème si possible)
+  let pool = qDeck.filter((_,i) => i !== qIdx);
+  if(pool.length < 3) pool = CARDS.filter(card => card !== c);
+  const wrong = shuffle(pool).slice(0,3);
+  const opts = shuffle([c, ...wrong]);
+
+  const container = document.getElementById('quiz-options');
+  container.innerHTML = '';
+  container.style.display = 'grid';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.innerHTML = `<strong style="color:var(--col-romaji)">${opt.romaji}</strong><br><span style="font-size:12px;color:var(--col-fr)">${opt.fr}</span>`;
+    btn.onclick = () => selectQuizOpt(btn, opt === c);
+    container.appendChild(btn);
+  });
+
+  const pct = Math.round((qIdx / qDeck.length) * 100);
+  document.getElementById('q-prog-bar').style.width = pct + '%';
+  document.getElementById('q-prog-text').textContent = (qIdx+1) + ' / ' + qDeck.length;
+}
+
+function selectQuizOpt(btn, correct) {
+  document.querySelectorAll('.quiz-opt').forEach(b => { b.disabled = true; });
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if(!correct) {
+    // montrer la bonne
+    document.querySelectorAll('.quiz-opt').forEach(b => {
+      if(!b.classList.contains('wrong')) b.classList.add('correct');
+    });
+    qKo++;
+  } else { qOk++; }
+  document.getElementById('stat-ok').textContent = qOk;
+  document.getElementById('stat-ko').textContent = qKo;
+  setTimeout(() => { qIdx++; showQuizCard(); }, 900);
+}
+
+function showQDone() {
+  document.getElementById('q-done-screen').classList.add('visible');
+  document.getElementById('quiz-options').style.display = 'none';
+  const total = qOk + qKo;
+  const pct = total > 0 ? Math.round((qOk/total)*100) : 0;
+  document.getElementById('q-done-pct').textContent = pct + '%';
+  document.getElementById('q-done-msg').textContent = pct >= 80
+    ? '素晴らしい！ — Vous êtes prêt(e) pour le voyage !'
+    : pct >= 50 ? 'がんばれ！ — Encore un peu, vous progressez !'
+    : 'ファイト！ — Recommencez pour ancrer le vocabulaire.';
+  document.getElementById('q-prog-bar').style.width = '100%';
+}
+
+function qRestart() {
+  document.getElementById('q-done-screen').classList.remove('visible');
+  buildDeck();
+}
+
+// ═══════════════════════════════════════
+//  MODE LISTE
+// ═══════════════════════════════════════
+function buildList() {
+  const container = document.getElementById('list-mode');
+  let filtered = currentTheme === 'all'
+    ? CARDS.slice()
+    : CARDS.filter(c => c.theme === currentTheme);
+  if(currentLevel !== 'all') filtered = filtered.filter(c => c.level === parseInt(currentLevel));
+
+  container.innerHTML = '';
+
+  // En mode "tout", on regroupe par thème puis par niveau
+  const groupKeys = currentTheme === 'all'
+    ? THEMES.filter(t => !t.isAll).map(t => t.id)
+    : [currentTheme];
+
+  groupKeys.forEach(tid => {
+    const themeCards = filtered.filter(c => c.theme === tid);
+    if(!themeCards.length) return;
+    const themeObj = THEMES.find(t => t.id === tid);
+
+    if(currentTheme === 'all') {
+      const header = document.createElement('div');
+      header.style.cssText = `font-size:13px;font-weight:500;color:${themeObj.color};margin:1.5rem 0 .5rem;letter-spacing:.04em;display:flex;align-items:center;gap:8px;`;
+      header.innerHTML = `<span>${themeObj.icon}</span>${themeObj.label}`;
+      container.appendChild(header);
+    }
+
+    [1,2,3].forEach(lv => {
+      const group = themeCards.filter(c => c.level === lv);
+      if(!group.length) return;
+      const div = document.createElement('div');
+      div.className = 'wl-group';
+      div.innerHTML = `<div class="wl-group-title">${lv===1?'Débutant — mots isolés':lv===2?'Intermédiaire — phrases courtes':'Avancé — expressions complexes'}</div>`;
+      group.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'wl-item';
+        row.innerHTML = `
+          <div class="wl-col-jp">
+            <div class="wl-kana">${c.kana}</div>
+            ${c.kanji && c.kanji !== c.kana ? `<div class="wl-kanji">${c.kanji}</div>` : ''}
+          </div>
+          <div class="wl-col-fr">
+            <div class="wl-romaji">${c.romaji}</div>
+            <div class="wl-fr">${c.fr}</div>
+          </div>
+          <div class="wl-lvl">${lv===1?'débutant':lv===2?'inter.':'avancé'}</div>
+          <button class="btn-audio" title="Écouter en japonais" onclick="speakJP('${c.kana.replace(/'/g,"\\'")}', this)">♪</button>
+        `;
+        div.appendChild(row);
+      });
+      container.appendChild(div);
+    });
+  });
+  updateStats();
+}
+// ═══════════════════════════════════════
+function updateStats() {
+  const filtered = CARDS.filter(c => {
+    if(currentTheme !== 'all' && c.theme !== currentTheme) return false;
+    if(currentLevel !== 'all' && c.level !== parseInt(currentLevel)) return false;
+    return true;
+  });
+  document.getElementById('stat-ok').textContent = okCount;
+  document.getElementById('stat-ko').textContent = koCount;
+  document.getElementById('stat-total').textContent = filtered.length + ' cartes';
+}
+
+// ═══════════════════════════════════════
+//  AUDIO TTS
+// ═══════════════════════════════════════
+function speakJP(text, btn) {
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'ja-JP';
+  utter.rate = 0.85;
+  utter.pitch = 1;
+
+  // Chercher une voix japonaise disponible
+  const voices = window.speechSynthesis.getVoices();
+  const jpVoice = voices.find(v => v.lang.startsWith('ja'));
+  if(jpVoice) utter.voice = jpVoice;
+
+  if(btn) {
+    btn.classList.add('playing');
+    utter.onend = () => btn.classList.remove('playing');
+    utter.onerror = () => btn.classList.remove('playing');
+  }
+  window.speechSynthesis.speak(utter);
+}
+
+// Précharger les voix dès que possible
+if(window.speechSynthesis) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+// ═══════════════════════════════════════
+//  RÉGLAGES
+// ═══════════════════════════════════════
+let currentJPFont = 'serif';
+
+function openSettings() {
+  document.getElementById('settings-overlay').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settings-overlay').classList.remove('open');
+}
+function overlayClick(e) {
+  if(e.target === document.getElementById('settings-overlay')) closeSettings();
+}
+
+function applyTxtScale(val) {
+  document.documentElement.style.setProperty('--txt-scale', val / 100);
+  document.getElementById('txt-scale-val').textContent = val + '%';
+}
+
+function setJPFont(choice) {
+  currentJPFont = choice;
+  const font = choice === 'round'
+    ? "'M PLUS Rounded 1c', sans-serif"
+    : "'Noto Serif JP', serif";
+  document.documentElement.style.setProperty('--font-jp', font);
+  document.getElementById('font-opt-serif').classList.toggle('active', choice === 'serif');
+  document.getElementById('font-opt-round').classList.toggle('active', choice === 'round');
+}
+
+init();
+</script>
+</body>
+</html>
